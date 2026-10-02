@@ -1,8 +1,14 @@
 <!doctype html>
 <html lang="sk">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1,viewport-fit=cover"
+>
 
 <title>ebike-soltech</title>
 
@@ -13,19 +19,31 @@
 
 <style>
 
+/* =========================
+   ZÁKLAD
+========================= */
+
 *{
   box-sizing:border-box;
 }
 
-html,body,#app{
+html,
+body,
+#app{
   height:100%;
   margin:0;
 }
 
 body{
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
   background:#eef3ef;
   color:#17372b;
+
   overflow:hidden;
 }
 
@@ -34,87 +52,127 @@ body{
   flex-direction:column;
 }
 
+
 /* =========================
    HEADER
 ========================= */
 
 .top{
+
   min-height:66px;
+
   background:#fff;
+
   display:flex;
   align-items:center;
+
   padding:10px 18px;
-  box-shadow:0 2px 14px #0002;
+
+  box-shadow:
+    0 2px 14px #0002;
+
   z-index:1000;
 }
 
 .brand{
+
   font-size:20px;
+
   font-weight:900;
+
   line-height:1.1;
 }
 
 .brand small{
+
   display:block;
+
   font-size:10px;
+
   color:#77847e;
+
   font-weight:600;
+
   margin-top:4px;
 }
+
 
 /* =========================
    MAPA
 ========================= */
 
 #map{
+
   flex:1;
+
   min-height:0;
+
   width:100%;
-  background:#dfe8e2;
+
+  background:#777;
 }
 
 .leaflet-control-attribution{
   font-size:9px;
 }
 
+
 /* =========================
-   MARKER
+   STATION MARKER
 ========================= */
 
 .station-pin{
+
   width:34px;
+
   height:42px;
+
   position:relative;
 }
 
 .station-pin:before{
+
   content:"";
+
   position:absolute;
+
   left:3px;
   top:2px;
+
   width:27px;
   height:27px;
 
   border:3px solid #fff;
 
-  border-radius:50% 50% 50% 0;
+  border-radius:
+    50% 50% 50% 0;
 
   transform:rotate(-45deg);
 
-  box-shadow:0 3px 8px #0005;
+  box-shadow:
+    0 3px 8px #0005;
 }
 
 .station-pin span{
+
   position:absolute;
+
   z-index:2;
+
   left:0;
   top:6px;
+
   width:33px;
+
   text-align:center;
+
   color:#fff;
+
   font-size:13px;
+
   font-weight:900;
 }
+
 
 /* =========================
    FARBY STANÍC
@@ -136,51 +194,76 @@ body{
   background:#2777d4;
 }
 
+
 /* =========================
    POPUP
 ========================= */
 
 .popup h3{
-  margin:0 0 4px;
+
+  margin:
+    0 0 4px;
+
   font-size:18px;
 }
 
 .sub{
+
   color:#718079;
+
   font-size:12px;
 }
 
 .ok{
+
   color:#0d9d5a;
+
   font-weight:800;
+
   font-size:12px;
+
   margin:10px 0;
 }
 
 .empty{
+
   color:#e53935;
+
   font-weight:900;
+
   font-size:12px;
+
   margin:10px 0;
 }
 
 .low{
+
   color:#f39c12;
+
   font-weight:900;
+
   font-size:12px;
+
   margin:10px 0;
 }
 
 .meter{
+
   height:9px;
+
   background:#e5ebe7;
+
   border-radius:9px;
+
   overflow:hidden;
+
   margin-top:5px;
 }
 
 .meter i{
+
   display:block;
+
   height:100%;
 }
 
@@ -200,68 +283,107 @@ body{
   background:#2777d4;
 }
 
+
 .stats{
+
   display:grid;
-  grid-template-columns:1fr 1fr;
+
+  grid-template-columns:
+    1fr 1fr;
+
   gap:7px;
+
   margin-top:10px;
 }
 
 .stat{
-  border:1px solid #e4e9e6;
+
+  border:
+    1px solid #e4e9e6;
+
   border-radius:9px;
+
   padding:8px;
 }
 
 .stat b{
+
   display:block;
+
   font-size:15px;
 }
 
 .stat small{
+
   color:#718079;
+
   font-size:10px;
 }
 
 .nav{
+
   display:block;
+
   text-align:center;
+
   margin-top:10px;
+
   padding:9px;
+
   background:#16a566;
+
   color:#fff;
+
   text-decoration:none;
+
   border-radius:9px;
+
   font-weight:800;
 }
+
 
 /* =========================
    LEGENDA
 ========================= */
 
 .legend{
+
   background:#fff;
+
   padding:10px 12px;
+
   border-radius:10px;
-  box-shadow:0 2px 8px #0003;
+
+  box-shadow:
+    0 2px 8px #0003;
+
   font-size:11px;
+
   line-height:18px;
 }
 
 .legend-title{
+
   font-weight:900;
+
   margin-bottom:4px;
 }
 
 .legend-row{
+
   display:flex;
+
   align-items:center;
+
   gap:6px;
 }
 
 .legend-dot{
+
   width:11px;
+
   height:11px;
+
   border-radius:50%;
 }
 
@@ -281,12 +403,45 @@ body{
   background:#2777d4;
 }
 
+
+/* =========================
+   KRAJ – POPIS
+========================= */
+
+.region-label{
+
+  background:#ffffff;
+
+  border:none;
+
+  box-shadow:
+    0 2px 10px #0003;
+
+  color:#17372b;
+
+  font-size:16px;
+
+  font-weight:500;
+
+  padding:8px 14px;
+
+  border-radius:4px;
+}
+
 </style>
+
 </head>
+
 
 <body>
 
+
 <div id="app">
+
+
+  <!-- =========================
+       HEADER
+  ========================= -->
 
   <div class="top">
 
@@ -302,49 +457,320 @@ body{
 
   </div>
 
+
+  <!-- =========================
+       MAPA
+  ========================= -->
+
   <div id="map"></div>
+
 
 </div>
 
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
 
 <script>
 
-/* =========================
+
+/* =========================================================
    MAPA
-========================= */
+========================================================= */
 
 const map = L.map("map",{
+
   zoomControl:true,
+
   minZoom:7,
+
   maxZoom:18
+
 }).setView(
+
   [48.82,18.15],
+
   9
+
 );
 
 
+/* =========================
+   OPENSTREETMAP
+========================= */
+
 L.tileLayer(
+
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+
   {
+
     maxZoom:19,
-    attribution:"© OpenStreetMap contributors"
+
+    attribution:
+      "© OpenStreetMap contributors"
+
   }
+
 ).addTo(map);
 
 
-setTimeout(function(){
+/* =========================================================
+   VRSTVY MAPY
+========================================================= */
 
-  map.invalidateSize();
+/*
+   Svet mimo Slovenska
+   = tmavosivá nepriehľadná vrstva
+*/
 
-},500);
+const outsideLayer = L.rectangle(
+
+  [
+    [-90,-180],
+    [90,180]
+  ],
+
+  {
+
+    stroke:false,
+
+    fillColor:"#707472",
+
+    fillOpacity:0.96,
+
+    interactive:false
+
+  }
+
+).addTo(map);
 
 
-/* =========================
+/*
+   URL skutočných hraníc Slovenska
+*/
+
+const slovakiaURL =
+"https://raw.githubusercontent.com/drakh/slovakia-gps-data/master/GeoJSON/epsg_4326/slovakia_esri_epsg_4326.geojson";
+
+
+/*
+   URL skutočných hraníc krajov
+*/
+
+const regionsURL =
+"https://raw.githubusercontent.com/drakh/slovakia-gps-data/master/GeoJSON/epsg_4326/regions_epsg_4326.geojson";
+
+
+/* =========================================================
+   SLOVENSKO
+========================================================= */
+
+fetch(slovakiaURL)
+
+.then(function(response){
+
+  return response.json();
+
+})
+
+.then(function(slovakia){
+
+  /*
+     Celé Slovensko svetlosivé
+  */
+
+  L.geoJSON(
+
+    slovakia,
+
+    {
+
+      style:{
+
+        color:"#ffffff",
+
+        weight:2,
+
+        fillColor:"#d9ddda",
+
+        fillOpacity:0.94
+
+      },
+
+      interactive:false
+
+    }
+
+  ).addTo(map);
+
+})
+
+.catch(function(error){
+
+  console.log(
+    "Nepodarilo sa načítať hranice Slovenska:",
+    error
+  );
+
+});
+
+
+/* =========================================================
+   KRAJE SLOVENSKA
+========================================================= */
+
+fetch(regionsURL)
+
+.then(function(response){
+
+  return response.json();
+
+})
+
+.then(function(regions){
+
+  L.geoJSON(
+
+    regions,
+
+    {
+
+      style:function(feature){
+
+        /*
+          Prehľadáme všetky vlastnosti
+          daného kraja.
+
+          Ak sa kdekoľvek nachádza
+          "Trenč", označíme ho ako
+          Trenčiansky kraj.
+        */
+
+        const values =
+          Object.values(
+            feature.properties || {}
+          );
+
+        const text =
+          values
+            .join(" ")
+            .toLowerCase();
+
+
+        /*
+          TRENČIANSKY KRAJ
+        */
+
+        if(
+          text.includes("tren")
+        ){
+
+          return {
+
+            color:"#ffffff",
+
+            weight:3,
+
+            fillColor:"#20ad6a",
+
+            fillOpacity:0.42
+
+          };
+
+        }
+
+
+        /*
+          OSTATNÉ KRAJE
+        */
+
+        return {
+
+          color:"#ffffff",
+
+          weight:1.5,
+
+          fillColor:"#d9ddda",
+
+          fillOpacity:0.94
+
+        };
+
+      },
+
+
+      onEachFeature:function(feature,layer){
+
+        const values =
+          Object.values(
+            feature.properties || {}
+          );
+
+        const text =
+          values
+            .join(" ")
+            .toLowerCase();
+
+
+        /*
+          Popis iba pre Trenčiansky kraj
+        */
+
+        if(
+          text.includes("tren")
+        ){
+
+          layer.bindTooltip(
+
+            "TRENČIANSKY KRAJ",
+
+            {
+
+              sticky:true,
+
+              className:"region-label"
+
+            }
+
+          );
+
+        }
+
+      },
+
+
+      interactive:false
+
+    }
+
+  ).addTo(map);
+
+})
+
+.catch(function(error){
+
+  console.log(
+    "Nepodarilo sa načítať kraje:",
+    error
+  );
+
+});
+
+
+/* =========================================================
    STANICE
-========================= */
+========================================================= */
+
+/*
+   názov
+   latitude
+   longitude
+   percentá
+   obsadené konektory
+*/
 
 const stations = [
 
@@ -399,81 +825,135 @@ const stations = [
 ];
 
 
-/* =========================
-   URČENIE STAVU
-========================= */
+/* =========================================================
+   STAV STANICE
+========================================================= */
 
 function getStatus(pct){
 
   if(pct === 0){
 
     return {
+
       marker:"station-red",
-      meter:"meter-red"
+
+      meter:"meter-red",
+
+      text:"Stanica je úplne vybitá"
+
     };
 
   }
+
 
   if(pct <= 20){
 
     return {
+
       marker:"station-orange",
-      meter:"meter-orange"
+
+      meter:"meter-orange",
+
+      text:"Nízka kapacita"
+
     };
 
   }
+
 
   if(pct <= 70){
 
     return {
+
       marker:"station-green",
-      meter:"meter-green"
+
+      meter:"meter-green",
+
+      text:"Stanica v prevádzke"
+
     };
 
   }
 
+
   return {
+
     marker:"station-blue",
-    meter:"meter-blue"
+
+    meter:"meter-blue",
+
+    text:"Vysoká kapacita"
+
   };
 
 }
 
 
-/* =========================
-   STANICE
-========================= */
+/* =========================================================
+   STANICE NA MAPE
+========================================================= */
 
 stations.forEach(function(d){
 
-  const name = d[0];
-  const lat = d[1];
-  const lon = d[2];
-  const pct = d[3];
-  const occupied = d[4];
+  const name =
+    d[0];
 
-  const status = getStatus(pct);
+  const lat =
+    d[1];
 
+  const lon =
+    d[2];
 
-  const icon = L.divIcon({
+  const pct =
+    d[3];
 
-    className:"",
-
-    html:
-      '<div class="station-pin ' +
-      status.marker +
-      '">' +
-      '<span>⚡</span>' +
-      '</div>',
-
-    iconSize:[34,42],
-
-    iconAnchor:[17,42]
-
-  });
+  const occupied =
+    d[4];
 
 
-  let statusHTML;
+  const status =
+    getStatus(pct);
+
+
+  /* =========================
+     IKONA
+  ========================= */
+
+  const icon =
+    L.divIcon({
+
+      className:"",
+
+      html:
+
+        '<div class="station-pin ' +
+
+        status.marker +
+
+        '">' +
+
+        '<span>⚡</span>' +
+
+        '</div>',
+
+      iconSize:[
+        34,
+        42
+      ],
+
+      iconAnchor:[
+        17,
+        42
+      ]
+
+    });
+
+
+  /* =========================
+     STATUS
+  ========================= */
+
+  let statusHTML = "";
 
 
   if(pct === 0){
@@ -481,7 +961,9 @@ stations.forEach(function(d){
     statusHTML =
 
       '<div class="empty">' +
+
       '● STANICA JE ÚPLNE VYBITÁ' +
+
       '</div>';
 
   }
@@ -491,7 +973,9 @@ stations.forEach(function(d){
     statusHTML =
 
       '<div class="low">' +
+
       '● NÍZKA KAPACITA' +
+
       '</div>';
 
   }
@@ -501,11 +985,17 @@ stations.forEach(function(d){
     statusHTML =
 
       '<div class="ok">' +
+
       '● Stanica v prevádzke' +
+
       '</div>';
 
   }
 
+
+  /* =========================
+     POPUP
+  ========================= */
 
   const full = `
 
@@ -515,36 +1005,53 @@ stations.forEach(function(d){
         ⚡ ebike-soltech
       </h3>
 
+
       <div class="sub">
+
         📍 ${name}
+
       </div>
+
 
       ${statusHTML}
 
+
       <b>
-        Nabitá kapacita: ${pct}%
+
+        Nabitá kapacita:
+        ${pct}%
+
       </b>
+
 
       <div class="meter">
 
         <i
+
           class="${status.meter}"
-          style="width:${pct}%">
-        </i>
+
+          style="width:${pct}%"
+
+        ></i>
 
       </div>
 
 
       <div class="stats">
 
+
         <div class="stat">
 
           <b>
+
             ${occupied} / 8
+
           </b>
 
           <small>
+
             obsadené konektory
+
           </small>
 
         </div>
@@ -553,11 +1060,19 @@ stations.forEach(function(d){
         <div class="stat">
 
           <b>
-            ${pct === 0 ? "0" : (pct/25).toFixed(1)}
+
+            ${
+              pct === 0
+              ? "0"
+              : (pct/25).toFixed(1)
+            }
+
           </b>
 
           <small>
+
             ekvivalent plných e-bikov
+
           </small>
 
         </div>
@@ -566,11 +1081,15 @@ stations.forEach(function(d){
         <div class="stat">
 
           <b>
+
             8×
+
           </b>
 
           <small>
+
             e-bike konektor
+
           </small>
 
         </div>
@@ -579,216 +1098,156 @@ stations.forEach(function(d){
         <div class="stat">
 
           <b>
+
             1×
+
           </b>
 
           <small>
+
             230 V smartfón
+
           </small>
 
         </div>
+
 
       </div>
 
 
       <a
+
         class="nav"
+
         target="_blank"
+
         href="https://mapy.com/zakladni?x=${lon}&y=${lat}&z=15"
+
       >
+
         ➤ Navigovať v Mapy.com
+
       </a>
+
 
     </div>
 
   `;
 
 
+  /* =========================
+     MARKER
+  ========================= */
+
   L.marker(
+
     [lat,lon],
+
     {
+
       icon:icon
+
     }
+
   )
+
   .addTo(map)
+
   .bindPopup(
+
     full,
+
     {
+
       maxWidth:330
+
     }
+
   );
 
 });
 
 
 /* =========================================================
-   PRESNÝ TRENČIANSKY KRAJ
-   =========================
-
-   Načítanie oficiálnej polygonovej hranice
-   Trenčianskeho kraja z GIS dát.
-
-   Nepoužívame už ručne nakreslené súradnice.
+   LEGENDA
 ========================================================= */
 
-const krajURL =
-  "https://gis.scitanie.sk/server/rest/services/Hosted/hranice/FeatureServer/13/query" +
-  "?where=1%3D1" +
-  "&outFields=*" +
-  "&returnGeometry=true" +
-  "&outSR=4326" +
-  "&f=geojson";
+const legend =
 
+  L.control({
 
-fetch(krajURL)
-
-  .then(function(response){
-
-    if(!response.ok){
-      throw new Error("GIS server neodpovedá");
-    }
-
-    return response.json();
-
-  })
-
-  .then(function(data){
-
-    /*
-      Nájdeme objekt Trenčianskeho kraja.
-      Používame viac možností názvu, aby bol
-      kód odolný voči zmene názvu polí.
-    */
-
-    const feature =
-      data.features.find(function(f){
-
-        const p = f.properties || {};
-
-        const values = Object.values(p)
-          .map(function(v){
-            return String(v || "").toLowerCase();
-          });
-
-        return values.some(function(v){
-
-          return (
-            v.includes("trenčiansky") ||
-            v.includes("trenciansky")
-          );
-
-        });
-
-      });
-
-
-    if(!feature){
-
-      console.error(
-        "Trenčiansky kraj sa v GIS dátach nenašiel."
-      );
-
-      return;
-
-    }
-
-
-    /*
-      Vykreslenie presného polygonu
-    */
-
-    const krajLayer = L.geoJSON(
-      feature,
-      {
-
-        style:{
-
-          color:"#ffffff",
-
-          weight:3,
-
-          opacity:1,
-
-          fillColor:"#20ad6a",
-
-          fillOpacity:0.18
-
-        }
-
-      }
-
-    ).addTo(map);
-
-
-    krajLayer.bindTooltip(
-      "TRENČIANSKY KRAJ",
-      {
-        sticky:true
-      }
-    );
-
-
-    /*
-      Polygon dáme pod stanice,
-      aby ich zelená plocha nezakrývala.
-    */
-
-    krajLayer.bringToBack();
-
-  })
-
-  .catch(function(error){
-
-    console.error(
-      "Nepodarilo sa načítať hranicu kraja:",
-      error
-    );
+    position:"bottomright"
 
   });
 
 
-/* =========================
-   LEGENDA
-========================= */
-
-const legend = L.control({
-  position:"bottomright"
-});
-
-
 legend.onAdd = function(){
 
-  const div = L.DomUtil.create(
-    "div",
-    "legend"
-  );
+
+  const div =
+
+    L.DomUtil.create(
+
+      "div",
+
+      "legend"
+
+    );
 
 
   div.innerHTML = `
 
+
     <div class="legend-title">
+
       Stav stanice
+
     </div>
 
+
     <div class="legend-row">
-      <span class="legend-dot dot-red"></span>
+
+      <span
+        class="legend-dot dot-red">
+      </span>
+
       0 % – vybitá
+
     </div>
 
+
     <div class="legend-row">
-      <span class="legend-dot dot-orange"></span>
+
+      <span
+        class="legend-dot dot-orange">
+      </span>
+
       1–20 % – nízka
+
     </div>
 
+
     <div class="legend-row">
-      <span class="legend-dot dot-green"></span>
+
+      <span
+        class="legend-dot dot-green">
+      </span>
+
       21–70 % – dostupná
+
     </div>
 
+
     <div class="legend-row">
-      <span class="legend-dot dot-blue"></span>
+
+      <span
+        class="legend-dot dot-blue">
+      </span>
+
       71–100 % – vysoká
+
     </div>
+
 
   `;
 
@@ -801,32 +1260,67 @@ legend.onAdd = function(){
 legend.addTo(map);
 
 
-/* =========================
+/* =========================================================
    ZOOM NA STANICE
-========================= */
+========================================================= */
 
-const bounds = L.latLngBounds(
+const bounds =
 
-  stations.map(function(s){
+  L.latLngBounds(
 
-    return [
-      s[1],
-      s[2]
-    ];
+    stations.map(
 
-  })
+      function(s){
+
+        return [
+
+          s[1],
+
+          s[2]
+
+        ];
+
+      }
+
+    )
+
+  );
+
+
+map.fitBounds(
+
+  bounds,
+
+  {
+
+    padding:[
+      25,
+      25
+    ]
+
+  }
 
 );
 
 
-map.fitBounds(
-  bounds,
-  {
-    padding:[25,25]
-  }
+/* =========================================================
+   OPRAVA VEĽKOSTI MAPY
+========================================================= */
+
+setTimeout(
+
+  function(){
+
+    map.invalidateSize();
+
+  },
+
+  500
+
 );
 
 </script>
 
 </body>
+
 </html>
