@@ -9,10 +9,10 @@
 <link
   rel="stylesheet"
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-  crossorigin=""
 >
 
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -35,6 +35,7 @@ body{
 }
 
 /* HEADER */
+
 .top{
   min-height:66px;
   background:#fff;
@@ -60,6 +61,7 @@ body{
 }
 
 /* MAP */
+
 #map{
   flex:1;
   min-height:0;
@@ -72,6 +74,7 @@ body{
 }
 
 /* STATION MARKER */
+
 .station-pin{
   width:34px;
   height:42px;
@@ -85,10 +88,13 @@ body{
   top:2px;
   width:27px;
   height:27px;
-  background:#16a566;
+
   border:3px solid #fff;
+
   border-radius:50% 50% 50% 0;
+
   transform:rotate(-45deg);
+
   box-shadow:0 3px 8px #0005;
 }
 
@@ -104,7 +110,26 @@ body{
   font-weight:900;
 }
 
+/* FARBY VLajočiek */
+
+.station-red:before{
+  background:#e53935;
+}
+
+.station-orange:before{
+  background:#f39c12;
+}
+
+.station-green:before{
+  background:#19a766;
+}
+
+.station-blue:before{
+  background:#2777d4;
+}
+
 /* POPUP */
+
 .popup h3{
   margin:0 0 4px;
   font-size:18px;
@@ -122,6 +147,20 @@ body{
   margin:10px 0;
 }
 
+.empty{
+  color:#e53935;
+  font-weight:900;
+  font-size:12px;
+  margin:10px 0;
+}
+
+.low{
+  color:#f39c12;
+  font-weight:900;
+  font-size:12px;
+  margin:10px 0;
+}
+
 .meter{
   height:9px;
   background:#e5ebe7;
@@ -133,7 +172,22 @@ body{
 .meter i{
   display:block;
   height:100%;
+}
+
+.meter-red{
+  background:#e53935;
+}
+
+.meter-orange{
+  background:#f39c12;
+}
+
+.meter-green{
   background:#19a766;
+}
+
+.meter-blue{
+  background:#2777d4;
 }
 
 .stats{
@@ -171,27 +225,52 @@ body{
   font-weight:800;
 }
 
-/* MAP ERROR */
-.map-error{
-  position:absolute;
-  left:50%;
-  top:50%;
-  transform:translate(-50%,-50%);
+/* LEGENDA */
+
+.legend{
   background:#fff;
-  padding:18px 20px;
-  border-radius:14px;
-  box-shadow:0 4px 20px #0003;
-  text-align:center;
-  z-index:500;
-  max-width:90%;
-  display:none;
+  padding:10px 12px;
+  border-radius:10px;
+  box-shadow:0 2px 8px #0003;
+  font-size:11px;
+  line-height:18px;
 }
 
-.map-error b{
-  display:block;
-  margin-bottom:6px;
+.legend-title{
+  font-weight:900;
+  margin-bottom:4px;
 }
+
+.legend-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+
+.legend-dot{
+  width:11px;
+  height:11px;
+  border-radius:50%;
+}
+
+.dot-red{
+  background:#e53935;
+}
+
+.dot-orange{
+  background:#f39c12;
+}
+
+.dot-green{
+  background:#19a766;
+}
+
+.dot-blue{
+  background:#2777d4;
+}
+
 </style>
+
 </head>
 
 <body>
@@ -199,27 +278,28 @@ body{
 <div id="app">
 
   <div class="top">
+
     <div class="brand">
+
       ⚡ ebike-soltech
+
       <small>
         Interaktívna sieť nabíjacích staníc • Trenčiansky kraj
       </small>
+
     </div>
+
   </div>
 
   <div id="map"></div>
 
-  <div id="mapError" class="map-error">
-    <b>Mapa sa nepodarilo načítať</b>
-    Skontroluj internetové pripojenie.
-  </div>
-
 </div>
 
+
 <script
-  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-  crossorigin="">
+src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
 </script>
+
 
 <script>
 
@@ -227,144 +307,286 @@ body{
    MAPA
 ========================= */
 
-const map = L.map("map", {
+const map = L.map("map",{
   zoomControl:true,
   minZoom:7,
   maxZoom:18
-}).setView([48.82,18.15],9);
+}).setView(
+  [48.82,18.15],
+  9
+);
 
 
-/* MAPOVÝ PODKLAD */
-
-const tiles = L.tileLayer(
+L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
     maxZoom:19,
-    attribution:"© OpenStreetMap contributors",
-    crossOrigin:true
+    attribution:"© OpenStreetMap contributors"
   }
-);
+).addTo(map);
 
-tiles.addTo(map);
-
-
-/* OPRAVA VEĽKOSTI MAPY */
 
 setTimeout(function(){
+
   map.invalidateSize();
+
 },500);
-
-window.addEventListener("resize",function(){
-  map.invalidateSize();
-});
-
-
-/* CHYBA MAPY */
-
-tiles.on("tileerror",function(){
-  document.getElementById("mapError").style.display="block";
-});
 
 
 /* =========================
    STANICE
 ========================= */
 
+/*
+  názov
+  latitude
+  longitude
+  percentá
+  obsadené konektory
+*/
+
 const stations = [
 
-["Trenčín",48.8945,18.044,78,3],
-["Beckov",48.788,17.898,92,1],
-["Nové Mesto nad Váhom",48.757,17.830,33,6],
-["Myjava",48.758,17.568,82,1],
-["Dubnica nad Váhom",48.961,18.167,64,5],
-["Ilava",49.001,18.236,41,7],
-["Púchov",49.124,18.325,87,2],
-["Považská Bystrica",49.115,18.449,58,4],
-["Trenčianske Teplice",48.910,18.168,56,4],
-["Nemšová",48.967,18.119,47,6],
-["Bánovce nad Bebravou",48.721,18.257,73,2],
-["Bojnice",48.781,18.585,95,0],
-["Partizánske",48.629,18.384,61,3],
-["Brezová pod Bradlom",48.664,17.540,69,2],
-["Čachtice",48.714,17.787,52,5],
-["Duchonka",48.698,18.070,37,7],
-["Manínska tiesňava",49.176,18.486,88,1],
-["Stará Turá",48.778,17.695,45,5],
-["Handlová",48.727,18.760,67,3],
-["Inovec",48.810,18.030,84,1],
-["Zelená Voda",48.760,17.988,29,7],
-["Skalka",48.894,18.009,91,0],
-["Lazy pod Makytou",49.221,18.234,54,4],
-["Kľak",48.994,18.663,72,2]
+  ["Trenčín",48.8945,18.044,0,8],
+
+  ["Beckov",48.788,17.898,92,1],
+
+  ["Nové Mesto nad Váhom",48.757,17.830,33,6],
+
+  ["Myjava",48.758,17.568,82,1],
+
+  ["Dubnica nad Váhom",48.961,18.167,64,5],
+
+  ["Ilava",49.001,18.236,41,7],
+
+  ["Púchov",49.124,18.325,0,8],
+
+  ["Považská Bystrica",49.115,18.449,58,4],
+
+  ["Trenčianske Teplice",48.910,18.168,56,4],
+
+  ["Nemšová",48.967,18.119,17,7],
+
+  ["Bánovce nad Bebravou",48.721,18.257,73,2],
+
+  ["Bojnice",48.781,18.585,0,8],
+
+  ["Partizánske",48.629,18.384,61,3],
+
+  ["Brezová pod Bradlom",48.664,17.540,69,2],
+
+  ["Čachtice",48.714,17.787,52,5],
+
+  ["Duchonka",48.698,18.070,0,8],
+
+  ["Manínska tiesňava",49.176,18.486,88,1],
+
+  ["Stará Turá",48.778,17.695,45,5],
+
+  ["Handlová",48.727,18.760,67,3],
+
+  ["Inovec",48.810,18.030,84,1],
+
+  ["Zelená Voda",48.760,17.988,12,7],
+
+  ["Skalka",48.894,18.009,0,8],
+
+  ["Lazy pod Makytou",49.221,18.234,54,4],
+
+  ["Kľak",48.994,18.663,72,2]
 
 ];
 
 
-/* IKONA */
+/* =========================
+   URČENIE FARBY
+========================= */
 
-const icon = L.divIcon({
-  className:"",
-  html:'<div class="station-pin"><span>⚡</span></div>',
-  iconSize:[34,42],
-  iconAnchor:[17,42]
-});
+function getStatus(pct){
+
+  if(pct === 0){
+    return {
+      marker:"station-red",
+      meter:"meter-red",
+      text:"Stanica je úplne vybitá"
+    };
+  }
+
+  if(pct <= 20){
+    return {
+      marker:"station-orange",
+      meter:"meter-orange",
+      text:"Nízka kapacita"
+    };
+  }
+
+  if(pct <= 70){
+    return {
+      marker:"station-green",
+      meter:"meter-green",
+      text:"Stanica v prevádzke"
+    };
+  }
+
+  return {
+    marker:"station-blue",
+    meter:"meter-blue",
+    text:"Vysoká kapacita"
+  };
+
+}
 
 
-/* VYKRESLENIE STANÍC */
+/* =========================
+   STANICE NA MAPE
+========================= */
 
 stations.forEach(function(d){
 
-  const name=d[0];
-  const lat=d[1];
-  const lon=d[2];
-  const pct=d[3];
-  const occ=d[4];
+  const name = d[0];
 
-  const full=`
+  const lat = d[1];
+
+  const lon = d[2];
+
+  const pct = d[3];
+
+  const occupied = d[4];
+
+  const status = getStatus(pct);
+
+
+  const icon = L.divIcon({
+
+    className:"",
+
+    html:
+      '<div class="station-pin ' +
+      status.marker +
+      '">' +
+      '<span>⚡</span>' +
+      '</div>',
+
+    iconSize:[34,42],
+
+    iconAnchor:[17,42]
+
+  });
+
+
+  let statusHTML="";
+
+  if(pct===0){
+
+    statusHTML=
+      '<div class="empty">' +
+      '● STANICA JE ÚPLNE VYBITÁ' +
+      '</div>';
+
+  }
+
+  else if(pct<=20){
+
+    statusHTML=
+      '<div class="low">' +
+      '● NÍZKA KAPACITA' +
+      '</div>';
+
+  }
+
+  else{
+
+    statusHTML=
+      '<div class="ok">' +
+      '● Stanica v prevádzke' +
+      '</div>';
+
+  }
+
+
+  const full = `
 
     <div class="popup">
 
-      <h3>⚡ ebike-soltech</h3>
+      <h3>
+        ⚡ ebike-soltech
+      </h3>
 
       <div class="sub">
         📍 ${name}
       </div>
 
-      <div class="ok">
-        ● Stanica v prevádzke
-      </div>
+      ${statusHTML}
 
       <b>
         Nabitá kapacita: ${pct}%
       </b>
 
       <div class="meter">
-        <i style="width:${pct}%"></i>
+
+        <i
+          class="${status.meter}"
+          style="width:${pct}%">
+        </i>
+
       </div>
+
 
       <div class="stats">
 
         <div class="stat">
-          <b>${occ} / 8</b>
-          <small>obsadené konektory</small>
+
+          <b>
+            ${occupied} / 8
+          </b>
+
+          <small>
+            obsadené konektory
+          </small>
+
         </div>
 
-        <div class="stat">
-          <b>${Math.round(pct/25*10)/10}</b>
-          <small>ekvivalent plných e-bikov</small>
-        </div>
 
         <div class="stat">
-          <b>8×</b>
-          <small>e-bike konektor</small>
+
+          <b>
+            ${pct===0 ? "0" : (pct/25).toFixed(1)}
+          </b>
+
+          <small>
+            ekvivalent plných e-bikov
+          </small>
+
         </div>
 
+
         <div class="stat">
-          <b>1×</b>
-          <small>230 V smartfón</small>
+
+          <b>
+            8×
+          </b>
+
+          <small>
+            e-bike konektor
+          </small>
+
+        </div>
+
+
+        <div class="stat">
+
+          <b>
+            1×
+          </b>
+
+          <small>
+            230 V smartfón
+          </small>
+
         </div>
 
       </div>
+
 
       <a
         class="nav"
@@ -378,53 +600,78 @@ stations.forEach(function(d){
 
   `;
 
-  L.marker([lat,lon],{
-    icon:icon
-  })
+
+  L.marker(
+    [lat,lon],
+    {
+      icon:icon
+    }
+  )
   .addTo(map)
-  .bindPopup(full,{
-    maxWidth:330
-  });
+  .bindPopup(
+    full,
+    {
+      maxWidth:330
+    }
+  );
 
 });
 
 
 /* =========================
    TRENČIANSKY KRAJ
+   DOČASNÉ VIZUÁLNE ZVÝRAZNENIE
 ========================= */
-
-/*
-  Zatiaľ používame vizuálne zvýraznenie
-  oblasti Trenčianskeho kraja.
-*/
 
 const trenCianskyKraj = [
 
   [49.33,17.95],
+
   [49.25,18.15],
+
   [49.28,18.45],
+
   [49.12,18.67],
+
   [48.86,18.78],
+
   [48.55,18.63],
+
   [48.50,18.30],
+
   [48.55,17.78],
+
   [48.72,17.50],
+
   [48.94,17.48],
+
   [49.10,17.67],
+
   [49.33,17.95]
 
 ];
 
+
 L.polygon(
+
   trenCianskyKraj,
+
   {
+
     color:"#ffffff",
+
     weight:3,
+
     fillColor:"#20ad6a",
+
     fillOpacity:0.18
+
   }
+
 )
+
 .addTo(map)
+
 .bindTooltip(
   "TRENČIANSKY KRAJ",
   {
@@ -434,18 +681,81 @@ L.polygon(
 
 
 /* =========================
-   AUTOMATICKÉ ZOOMOVANIE
+   LEGENDA
+========================= */
+
+const legend = L.control({
+  position:"bottomright"
+});
+
+
+legend.onAdd = function(){
+
+  const div = L.DomUtil.create(
+    "div",
+    "legend"
+  );
+
+  div.innerHTML = `
+
+    <div class="legend-title">
+      Stav stanice
+    </div>
+
+    <div class="legend-row">
+      <span class="legend-dot dot-red"></span>
+      0 % – vybitá
+    </div>
+
+    <div class="legend-row">
+      <span class="legend-dot dot-orange"></span>
+      1–20 % – nízka
+    </div>
+
+    <div class="legend-row">
+      <span class="legend-dot dot-green"></span>
+      21–70 % – dostupná
+    </div>
+
+    <div class="legend-row">
+      <span class="legend-dot dot-blue"></span>
+      71–100 % – vysoká
+    </div>
+
+  `;
+
+  return div;
+
+};
+
+
+legend.addTo(map);
+
+
+/* =========================
+   ZOOM NA STANICE
 ========================= */
 
 const bounds = L.latLngBounds(
+
   stations.map(function(s){
-    return [s[1],s[2]];
+
+    return [
+      s[1],
+      s[2]
+    ];
+
   })
+
 );
 
-map.fitBounds(bounds,{
-  padding:[25,25]
-});
+
+map.fitBounds(
+  bounds,
+  {
+    padding:[25,25]
+  }
+);
 
 </script>
 
