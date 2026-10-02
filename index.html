@@ -34,7 +34,9 @@ body{
   flex-direction:column;
 }
 
-/* HEADER */
+/* =========================
+   HEADER
+========================= */
 
 .top{
   min-height:66px;
@@ -60,7 +62,9 @@ body{
   margin-top:4px;
 }
 
-/* MAP */
+/* =========================
+   MAPA
+========================= */
 
 #map{
   flex:1;
@@ -73,7 +77,9 @@ body{
   font-size:9px;
 }
 
-/* STATION MARKER */
+/* =========================
+   MARKER
+========================= */
 
 .station-pin{
   width:34px;
@@ -110,7 +116,9 @@ body{
   font-weight:900;
 }
 
-/* FARBY VLajočiek */
+/* =========================
+   FARBY STANÍC
+========================= */
 
 .station-red:before{
   background:#e53935;
@@ -128,7 +136,9 @@ body{
   background:#2777d4;
 }
 
-/* POPUP */
+/* =========================
+   POPUP
+========================= */
 
 .popup h3{
   margin:0 0 4px;
@@ -225,7 +235,9 @@ body{
   font-weight:800;
 }
 
-/* LEGENDA */
+/* =========================
+   LEGENDA
+========================= */
 
 .legend{
   background:#fff;
@@ -270,7 +282,6 @@ body{
 }
 
 </style>
-
 </head>
 
 <body>
@@ -296,9 +307,7 @@ body{
 </div>
 
 
-<script
-src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
-</script>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 
 <script>
@@ -336,14 +345,6 @@ setTimeout(function(){
 /* =========================
    STANICE
 ========================= */
-
-/*
-  názov
-  latitude
-  longitude
-  percentá
-  obsadené konektory
-*/
 
 const stations = [
 
@@ -399,58 +400,56 @@ const stations = [
 
 
 /* =========================
-   URČENIE FARBY
+   URČENIE STAVU
 ========================= */
 
 function getStatus(pct){
 
   if(pct === 0){
+
     return {
       marker:"station-red",
-      meter:"meter-red",
-      text:"Stanica je úplne vybitá"
+      meter:"meter-red"
     };
+
   }
 
   if(pct <= 20){
+
     return {
       marker:"station-orange",
-      meter:"meter-orange",
-      text:"Nízka kapacita"
+      meter:"meter-orange"
     };
+
   }
 
   if(pct <= 70){
+
     return {
       marker:"station-green",
-      meter:"meter-green",
-      text:"Stanica v prevádzke"
+      meter:"meter-green"
     };
+
   }
 
   return {
     marker:"station-blue",
-    meter:"meter-blue",
-    text:"Vysoká kapacita"
+    meter:"meter-blue"
   };
 
 }
 
 
 /* =========================
-   STANICE NA MAPE
+   STANICE
 ========================= */
 
 stations.forEach(function(d){
 
   const name = d[0];
-
   const lat = d[1];
-
   const lon = d[2];
-
   const pct = d[3];
-
   const occupied = d[4];
 
   const status = getStatus(pct);
@@ -474,20 +473,23 @@ stations.forEach(function(d){
   });
 
 
-  let statusHTML="";
+  let statusHTML;
 
-  if(pct===0){
 
-    statusHTML=
+  if(pct === 0){
+
+    statusHTML =
+
       '<div class="empty">' +
       '● STANICA JE ÚPLNE VYBITÁ' +
       '</div>';
 
   }
 
-  else if(pct<=20){
+  else if(pct <= 20){
 
-    statusHTML=
+    statusHTML =
+
       '<div class="low">' +
       '● NÍZKA KAPACITA' +
       '</div>';
@@ -496,7 +498,8 @@ stations.forEach(function(d){
 
   else{
 
-    statusHTML=
+    statusHTML =
+
       '<div class="ok">' +
       '● Stanica v prevádzke' +
       '</div>';
@@ -550,7 +553,7 @@ stations.forEach(function(d){
         <div class="stat">
 
           <b>
-            ${pct===0 ? "0" : (pct/25).toFixed(1)}
+            ${pct === 0 ? "0" : (pct/25).toFixed(1)}
           </b>
 
           <small>
@@ -618,66 +621,130 @@ stations.forEach(function(d){
 });
 
 
-/* =========================
-   TRENČIANSKY KRAJ
-   DOČASNÉ VIZUÁLNE ZVÝRAZNENIE
-========================= */
+/* =========================================================
+   PRESNÝ TRENČIANSKY KRAJ
+   =========================
 
-const trenCianskyKraj = [
+   Načítanie oficiálnej polygonovej hranice
+   Trenčianskeho kraja z GIS dát.
 
-  [49.33,17.95],
+   Nepoužívame už ručne nakreslené súradnice.
+========================================================= */
 
-  [49.25,18.15],
-
-  [49.28,18.45],
-
-  [49.12,18.67],
-
-  [48.86,18.78],
-
-  [48.55,18.63],
-
-  [48.50,18.30],
-
-  [48.55,17.78],
-
-  [48.72,17.50],
-
-  [48.94,17.48],
-
-  [49.10,17.67],
-
-  [49.33,17.95]
-
-];
+const krajURL =
+  "https://gis.scitanie.sk/server/rest/services/Hosted/hranice/FeatureServer/13/query" +
+  "?where=1%3D1" +
+  "&outFields=*" +
+  "&returnGeometry=true" +
+  "&outSR=4326" +
+  "&f=geojson";
 
 
-L.polygon(
+fetch(krajURL)
 
-  trenCianskyKraj,
+  .then(function(response){
 
-  {
+    if(!response.ok){
+      throw new Error("GIS server neodpovedá");
+    }
 
-    color:"#ffffff",
+    return response.json();
 
-    weight:3,
+  })
 
-    fillColor:"#20ad6a",
+  .then(function(data){
 
-    fillOpacity:0.18
+    /*
+      Nájdeme objekt Trenčianskeho kraja.
+      Používame viac možností názvu, aby bol
+      kód odolný voči zmene názvu polí.
+    */
 
-  }
+    const feature =
+      data.features.find(function(f){
 
-)
+        const p = f.properties || {};
 
-.addTo(map)
+        const values = Object.values(p)
+          .map(function(v){
+            return String(v || "").toLowerCase();
+          });
 
-.bindTooltip(
-  "TRENČIANSKY KRAJ",
-  {
-    sticky:true
-  }
-);
+        return values.some(function(v){
+
+          return (
+            v.includes("trenčiansky") ||
+            v.includes("trenciansky")
+          );
+
+        });
+
+      });
+
+
+    if(!feature){
+
+      console.error(
+        "Trenčiansky kraj sa v GIS dátach nenašiel."
+      );
+
+      return;
+
+    }
+
+
+    /*
+      Vykreslenie presného polygonu
+    */
+
+    const krajLayer = L.geoJSON(
+      feature,
+      {
+
+        style:{
+
+          color:"#ffffff",
+
+          weight:3,
+
+          opacity:1,
+
+          fillColor:"#20ad6a",
+
+          fillOpacity:0.18
+
+        }
+
+      }
+
+    ).addTo(map);
+
+
+    krajLayer.bindTooltip(
+      "TRENČIANSKY KRAJ",
+      {
+        sticky:true
+      }
+    );
+
+
+    /*
+      Polygon dáme pod stanice,
+      aby ich zelená plocha nezakrývala.
+    */
+
+    krajLayer.bringToBack();
+
+  })
+
+  .catch(function(error){
+
+    console.error(
+      "Nepodarilo sa načítať hranicu kraja:",
+      error
+    );
+
+  });
 
 
 /* =========================
@@ -695,6 +762,7 @@ legend.onAdd = function(){
     "div",
     "legend"
   );
+
 
   div.innerHTML = `
 
@@ -723,6 +791,7 @@ legend.onAdd = function(){
     </div>
 
   `;
+
 
   return div;
 
