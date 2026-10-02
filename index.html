@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ebike-soltech</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+html,body,#app{height:100%;margin:0}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#eef3ef;color:#17372b}
+#app{display:flex;flex-direction:column}.top{height:62px;background:#fff;display:flex;align-items:center;padding:0 18px;box-shadow:0 2px 14px #0002;z-index:1000}
+.brand{font-size:19px;font-weight:900}.brand small{display:block;font-size:10px;color:#77847e;font-weight:600;margin-top:2px}
+#map{flex:1}.leaflet-control-attribution{font-size:9px}
+.region-label{font-weight:900;color:#fff;text-shadow:0 1px 3px #0009;text-align:center;font-size:13px;pointer-events:none}
+.station-pin{width:30px;height:38px;position:relative}.station-pin:before{content:"";position:absolute;left:2px;top:1px;width:25px;height:25px;background:#ef3e3e;border:3px solid #fff;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 8px #0005}.station-pin span{position:absolute;z-index:2;left:0;top:5px;width:30px;text-align:center;color:#fff;font-size:13px;font-weight:900}
+.popup h3{margin:0 0 3px;font-size:18px}.popup .sub{color:#718079;font-size:12px}.popup .ok{color:#0d9d5a;font-weight:800;font-size:12px;margin:10px 0}.meter{height:9px;background:#e5ebe7;border-radius:9px;overflow:hidden}.meter i{display:block;height:100%;background:#19a766}.stats{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}.stat{border:1px solid #e4e9e6;border-radius:9px;padding:8px}.stat b{display:block;font-size:15px}.stat small{color:#718079;font-size:10px}.nav{display:block;text-align:center;margin-top:10px;padding:9px;background:#16a566;color:white;text-decoration:none;border-radius:9px;font-weight:800}
+#loading{position:absolute;inset:62px 0 0;display:flex;align-items:center;justify-content:center;background:#eef3ef;z-index:900;font-weight:800} 
+@media(max-width:600px){.top{height:56px}.brand{font-size:17px}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="top"><div class="brand">⚡ ebike-soltech<small>Interaktívna sieť nabíjacích staníc</small></div></div>
+  <div id="map"></div>
+  <div id="loading">Načítavam reálnu mapu Slovenska…</div>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map',{zoomControl:true,minZoom:7,maxZoom:17}).setView([48.72,19.5],8);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap contributors'}).addTo(map);
+
+const stations=[
+["Trenčín",48.8945,18.044,78,3],["Beckov",48.788,17.898,92,1],["Nové Mesto nad Váhom",48.757,17.830,33,6],
+["Myjava",48.758,17.568,82,1],["Dubnica nad Váhom",48.961,18.167,64,5],["Ilava",49.001,18.236,41,7],
+["Púchov",49.124,18.325,87,2],["Považská Bystrica",49.115,18.449,58,4],["Trenčianske Teplice",48.910,18.168,56,4],
+["Nemšová",48.967,18.119,47,6],["Bánovce nad Bebravou",48.721,18.257,73,2],["Bojnice",48.781,18.585,95,0],
+["Partizánske",48.629,18.384,61,3],["Brezová pod Bradlom",48.664,17.540,69,2],["Čachtice",48.714,17.787,52,5],
+["Duchonka",48.698,18.070,37,7],["Manínska tiesňava",49.176,18.486,88,1],["Stará Turá",48.778,17.695,45,5],
+["Handlová",48.727,18.760,67,3],["Inovec",48.810,18.030,84,1],["Zelená Voda",48.760,17.988,29,7],
+["Skalka",48.894,18.009,91,0],["Lazy pod Makytou",49.221,18.234,54,4],["Kľak",48.994,18.663,72,2]
+];
+
+function icon(){return L.divIcon({className:'',html:'<div class="station-pin"><span>⚡</span></div>',iconSize:[30,38],iconAnchor:[15,38]})}
+function popup(d){
+ const [name,lat,lon,pct,occ]=d;
+ return `<div class="popup"><h3>ebike-soltech ${name}</h3><div class="sub">📍 ${name}</div><div class="ok">● Stanica v prevádzke</div><b>Nabitá kapacita: ${pct}%</b><div class="meter"><i style="width:${pct}%"></i></div><div class="stats"><div class="stat"><b>${occ} / 8</b><small>obsadené konektory</small></div><div class="stat"><b>${(pct*.04).toFixed(1).replace('.',',')}</b><small>plných e-bikov energie</small></div><div class="stat"><b>8×</b><small>e-bike konektor</small></div><div class="stat"><b>1×</b><small>230 V smartfón</small></div></div><a class="nav" target="_blank" href="https://mapy.com/zakladni?x=${lon}&y=${lat}&z=15">➤ Navigovať v Mapy.com</a></div>`
+}
+stations.forEach(d=>L.marker([d[1],d[2]],{icon:icon()}).addTo(map).bindPopup(popup(d),{maxWidth:330}));
+
+// Real first-level administrative boundaries from SimpleMaps, including SKTC = Trenčiansky.
+fetch('https://simplemaps.com/static/svg/country/sk/admin1/sk.json')
+ .then(r=>r.json()).then(g=>{
+   const layer=L.geoJSON(g,{
+     style:f=>({color:'#ffffff',weight:2,fillColor:f.properties.id==='SKTC'?'#20ad6a':'#858f8a',fillOpacity:f.properties.id==='SKTC'?.34:.45}),
+     onEachFeature:(f,l)=>{
+       const n=f.properties.name||'';
+       l.bindTooltip(n,{sticky:true});
+       l.on('click',()=>{
+         if(f.properties.id==='SKTC'){
+           map.fitBounds(l.getBounds(),{padding:[35,35],maxZoom:10});
+           l.setStyle({fillColor:'#20ad6a',fillOpacity:.52,weight:3});
+         }
+       });
+     }
+   }).addTo(map);
+   document.getElementById('loading').remove();
+ }).catch(()=>{
+   document.getElementById('loading').textContent='Mapový podklad sa nepodarilo načítať. Skontroluj internetové pripojenie.';
+ });
+</script>
+</body>
+</html>
