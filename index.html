@@ -35,7 +35,7 @@ html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial
 .leaflet-popup-content{margin:0!important}
 .leaflet-popup-tip{box-shadow:0 3px 8px rgba(0,0,0,.08)}
 .station-popup{width:300px;max-height:min(72vh,610px);overflow-y:auto;overflow-x:hidden;border-radius:18px;background:#fff}
-.popup-map{display:block;width:100%;height:145px;object-fit:cover;background:#e7ece9}
+.popup-station-visual{display:block;width:100%;height:145px;background:linear-gradient(135deg,#173d31,#4e806d);overflow:hidden}.station-visual-svg{width:100%;height:100%;display:block}.visual-caption{position:absolute;left:10px;bottom:8px;background:rgba(255,255,255,.92);color:#173d31;padding:4px 7px;border-radius:7px;font-size:10px;font-weight:800}
 .popup-content{padding:14px 15px 15px}
 .popup-title{font-size:19px;font-weight:800;color:#173d31;margin-bottom:3px;line-height:1.12}
 .popup-location{font-size:12px;color:#7a8781;margin-bottom:10px}
@@ -55,7 +55,7 @@ html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial
 .error{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(90%,420px);background:#fff;padding:22px;border-radius:16px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.16);z-index:5000;color:#173d31}
 @media(max-width:600px){
 .header{height:106px;min-height:106px;padding:11px 18px}.logo-bolt{font-size:33px}.logo-text{font-size:27px}.subtitle{font-size:13px}
-.station-popup{width:285px;max-height:70vh}.popup-map{height:132px}
+.station-popup{width:285px;max-height:70vh}.popup-station-visual{height:132px}
 }
 </style>
 </head>
@@ -150,7 +150,7 @@ function coordsToPath(coords){
   for(const ring of coords){
     if(!ring || ring.length<2) continue;
     ring.forEach((p,i)=>{
-      const q=map.latLngToContainerPoint([p[1],p[0]]);
+      const q=map.latLngToLayerPoint([p[1],p[0]]);
       d += (i===0 ? "M " : "L ") + q.x + " " + q.y + " ";
     });
     d+="Z ";
@@ -204,10 +204,6 @@ function statusText(p){
 
 function popupHtml(s){
   const sc=statusClass(s.percent);
-  const mapImg =
-    "https://api.mapy.com/v1/static/map?lon="+encodeURIComponent(s.lng)+
-    "&lat="+encodeURIComponent(s.lat)+"&zoom=14&width=600&height=290&scale=1&mapset=outdoor&apikey="+
-    encodeURIComponent(MAPY_API_KEY);
   const navUrl =
     "https://mapy.com/fnc/v1/route?end="+encodeURIComponent(s.lng+","+s.lat)+
     "&routeType=bike_mountain&navigate=true";
@@ -216,7 +212,25 @@ function popupHtml(s){
     encodeURIComponent(s.lng+","+s.lat)+"&zoom=16&marker=true";
   return `
     <div class="station-popup">
-      <img class="popup-map" src="${mapImg}" alt="Mapa lokality ${s.city}" loading="lazy">
+      <div class="popup-station-visual" aria-label="Ilustračný návrh nabíjacej stanice">
+        <svg class="station-visual-svg" viewBox="0 0 600 290" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <rect width="600" height="290" fill="#edf3ef"/>
+          <rect y="205" width="600" height="85" fill="#cbd8d1"/>
+          <path d="M70 205 L180 140 L520 140 L575 205 Z" fill="#173d31"/>
+          <path d="M95 198 L195 151 L500 151 L548 198 Z" fill="#263f36"/>
+          <g stroke="#8fd0b1" stroke-width="3" fill="#6da88e">
+            <rect x="215" y="157" width="48" height="28"/><rect x="268" y="157" width="48" height="28"/><rect x="321" y="157" width="48" height="28"/><rect x="374" y="157" width="48" height="28"/>
+          </g>
+          <rect x="185" y="198" width="12" height="70" rx="4" fill="#173d31"/><rect x="468" y="198" width="12" height="70" rx="4" fill="#173d31"/>
+          <rect x="270" y="201" width="62" height="67" rx="8" fill="#fff" stroke="#173d31" stroke-width="4"/>
+          <rect x="281" y="213" width="40" height="12" rx="4" fill="#19a968"/>
+          <text x="301" y="252" text-anchor="middle" font-size="25" font-weight="900" fill="#173d31">⚡</text>
+          <path d="M165 267 C175 239 200 230 219 267 M381 267 C391 239 416 230 435 267" fill="none" stroke="#173d31" stroke-width="5"/>
+          <circle cx="190" cy="246" r="15" fill="#fff" stroke="#173d31" stroke-width="4"/><circle cx="407" cy="246" r="15" fill="#fff" stroke="#173d31" stroke-width="4"/>
+          <text x="18" y="30" font-family="Arial" font-size="18" font-weight="800" fill="#173d31">E-BIKE SOLTECH</text>
+          <text x="18" y="53" font-family="Arial" font-size="12" fill="#587066">Ilustračný návrh nabíjacej stanice</text>
+        </svg>
+      </div>
       <div class="popup-content">
         <div class="popup-title">⚡ ${s.name}</div>
         <div class="popup-location">📍 ${s.city}, Trenčiansky kraj</div>
