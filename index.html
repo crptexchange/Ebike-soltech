@@ -51,30 +51,30 @@ body {
 ========================================================== */
 
 .header {
-  height: 125px;
-  min-height: 125px;
+  height: 115px;
+  min-height: 115px;
   background: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 15px 28px;
+  padding: 14px 24px;
   z-index: 3000;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 9px;
 }
 
 .logo-bolt {
-  font-size: 42px;
+  font-size: 39px;
   color: #ffb900;
   line-height: 1;
 }
 
 .logo-text {
-  font-size: 38px;
+  font-size: 34px;
   font-weight: 800;
   color: #153d31;
   letter-spacing: -1.5px;
@@ -82,9 +82,9 @@ body {
 
 .subtitle {
   margin-left: 3px;
-  margin-top: 4px;
+  margin-top: 3px;
   color: #718078;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
 }
 
@@ -97,12 +97,99 @@ body {
   flex: 1;
   width: 100%;
   position: relative;
-  background: white;
+  background: #dfe4e1;
 }
 
 .leaflet-container {
-  background: white;
+  background: #dfe4e1;
   font-family: Arial, Helvetica, sans-serif;
+}
+
+
+/* ==========================================================
+   MAP PANES
+========================================================== */
+
+/*
+   Poradie:
+
+   200 - mapa
+   350 - stmavenie mimo Slovenska
+   450 - sivé kraje
+   500 - hranice krajov
+   600 - markery
+   700 - popup/controls
+*/
+
+.leaflet-map-pane {
+  z-index: auto;
+}
+
+
+/* ==========================================================
+   OUTSIDE SLOVAKIA DIMMER
+========================================================== */
+
+.slovakia-dimmer-pane {
+  z-index: 350;
+  pointer-events: none;
+}
+
+.slovakia-dimmer-svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.slovakia-dimmer-rect {
+  fill: rgba(30, 38, 35, 0.68);
+}
+
+
+/* ==========================================================
+   REGIONS
+========================================================== */
+
+.regions-pane {
+  z-index: 450;
+  pointer-events: none;
+}
+
+.region-other {
+  fill: #7f8884;
+  fill-opacity: .58;
+
+  color: #68736e;
+  weight: 1.5;
+  opacity: .75;
+}
+
+.region-trencin {
+  fill: transparent;
+
+  color: #173d31;
+  weight: 3;
+  opacity: 1;
+}
+
+
+/* ==========================================================
+   SLOVAKIA BORDER
+========================================================== */
+
+.slovakia-border {
+  fill: none;
+
+  color: #173d31;
+
+  weight: 3;
+
+  opacity: .95;
+
+  pointer-events: none;
 }
 
 
@@ -114,18 +201,21 @@ body {
   border: none !important;
 
   box-shadow:
-    0 4px 14px rgba(0,0,0,.15);
+    0 4px 14px rgba(0,0,0,.18);
 
   z-index: 2500 !important;
 }
 
 .leaflet-control-zoom a {
-  width: 52px !important;
-  height: 52px !important;
-  line-height: 52px !important;
-  font-size: 30px !important;
+  width: 48px !important;
+  height: 48px !important;
+  line-height: 48px !important;
+
+  font-size: 28px !important;
+
   color: #111 !important;
   background: white !important;
+
   border: none !important;
 }
 
@@ -144,10 +234,14 @@ body {
 
 .charger-wrapper {
   position: relative;
+
   width: 42px;
   height: 32px;
+
   transform: translate(-50%, -50%);
-  transition: transform .18s ease;
+
+  transition:
+    transform .18s ease;
 }
 
 .charger-body {
@@ -168,6 +262,7 @@ body {
     inset 0 0 0 1px rgba(0,0,0,.15);
 
   display: flex;
+
   justify-content: center;
   align-items: center;
 }
@@ -190,8 +285,11 @@ body {
 
 .charger-bolt {
   color: white;
+
   font-size: 19px;
+
   font-weight: 900;
+
   line-height: 1;
 
   text-shadow:
@@ -238,6 +336,7 @@ body {
     0 4px 12px rgba(0,0,0,.30);
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -249,7 +348,9 @@ body {
 
 .station-cluster::before {
   content: "⚡";
+
   font-size: 14px;
+
   margin-right: 2px;
 }
 
@@ -270,12 +371,13 @@ body {
 
   color: #173d31;
 
-  font-size: 13px;
+  font-size: 12px;
+
   font-weight: 800;
 
-  padding: 7px 10px;
+  padding: 6px 8px;
 
-  border-radius: 9px;
+  border-radius: 8px;
 
   box-shadow:
     0 3px 12px rgba(0,0,0,.16);
@@ -283,6 +385,7 @@ body {
   border: 1px solid rgba(23,61,49,.08);
 
   opacity: 0;
+
   visibility: hidden;
 
   pointer-events: none;
@@ -293,6 +396,7 @@ body {
 
 .station-label.visible {
   opacity: 1;
+
   visibility: visible;
 }
 
@@ -310,20 +414,25 @@ body {
 
 .leaflet-popup-content {
   margin: 0 !important;
+
   width: 285px !important;
 }
 
 .station-popup {
   overflow: hidden;
+
   border-radius: 18px;
+
   background: white;
 }
 
 .popup-image {
   width: 100%;
+
   height: 135px;
 
   display: flex;
+
   align-items: center;
   justify-content: center;
 
@@ -335,6 +444,7 @@ body {
     );
 
   color: white;
+
   font-size: 46px;
 }
 
@@ -344,31 +454,41 @@ body {
 
 .popup-title {
   font-size: 20px;
+
   font-weight: 800;
+
   color: #173d31;
+
   margin-bottom: 3px;
 }
 
 .popup-location {
   color: #7a8781;
+
   font-size: 13px;
+
   margin-bottom: 14px;
 }
 
 .energy-row {
   display: flex;
+
   align-items: center;
+
   justify-content: space-between;
+
   margin-bottom: 9px;
 }
 
 .energy-label {
   color: #64736c;
+
   font-size: 13px;
 }
 
 .energy-value {
   font-weight: 800;
+
   color: #173d31;
 }
 
@@ -386,6 +506,7 @@ body {
 
 .progress-inner {
   height: 100%;
+
   border-radius: 10px;
 }
 
@@ -409,6 +530,7 @@ body {
 
 .info-label {
   color: #7a8781;
+
   font-size: 11px;
 }
 
@@ -442,35 +564,37 @@ body {
 
 
 /* ==========================================================
-   LEGEND
+   LEGEND - COMPACT
 ========================================================== */
 
 .legend {
   position: absolute;
 
-  right: 18px;
-  bottom: 20px;
+  right: 10px;
+  bottom: 12px;
 
-  background: rgba(255,255,255,.97);
+  background: rgba(255,255,255,.94);
 
-  border-radius: 18px;
+  border-radius: 13px;
 
-  padding: 18px 20px;
+  padding: 9px 11px;
 
   box-shadow:
-    0 8px 25px rgba(0,0,0,.18);
+    0 5px 18px rgba(0,0,0,.16);
 
   z-index: 2000;
+
+  min-width: 150px;
 }
 
 .legend-title {
   color: #173d31;
 
-  font-size: 19px;
+  font-size: 14px;
 
   font-weight: 800;
 
-  margin-bottom: 12px;
+  margin-bottom: 7px;
 }
 
 .legend-row {
@@ -478,20 +602,24 @@ body {
 
   align-items: center;
 
-  margin: 8px 0;
+  margin: 5px 0;
 
   color: #3f5149;
 
-  font-size: 14px;
+  font-size: 11px;
+
+  line-height: 1.2;
 }
 
 .legend-dot {
-  width: 15px;
-  height: 15px;
+  width: 10px;
+  height: 10px;
 
   border-radius: 50%;
 
-  margin-right: 10px;
+  margin-right: 7px;
+
+  flex-shrink: 0;
 }
 
 .legend-red {
@@ -521,11 +649,13 @@ body {
   left: 50%;
   top: 50%;
 
-  transform: translate(-50%, -50%);
+  transform:
+    translate(-50%, -50%);
 
   width: min(90%, 420px);
 
-  background: rgba(255,255,255,.97);
+  background:
+    rgba(255,255,255,.97);
 
   padding: 25px;
 
@@ -543,6 +673,7 @@ body {
 
 .map-error-icon {
   font-size: 42px;
+
   margin-bottom: 10px;
 }
 
@@ -572,56 +703,78 @@ body {
 @media (max-width: 600px) {
 
   .header {
-    height: 115px;
-    min-height: 115px;
-    padding: 14px 20px;
+    height: 108px;
+    min-height: 108px;
+
+    padding:
+      12px 18px;
   }
 
   .logo-bolt {
-    font-size: 36px;
+    font-size: 34px;
   }
 
   .logo-text {
-    font-size: 29px;
+    font-size: 28px;
   }
 
   .subtitle {
-    font-size: 15px;
+    font-size: 14px;
+
+    line-height: 1.25;
   }
 
   .legend {
-    right: 12px;
-    bottom: 15px;
+    right: 9px;
+    bottom: 10px;
 
-    padding: 14px 16px;
+    padding:
+      8px 10px;
 
-    border-radius: 16px;
+    min-width: 143px;
   }
 
   .legend-title {
-    font-size: 17px;
-  }
-
-  .legend-row {
     font-size: 13px;
   }
 
+  .legend-row {
+    font-size: 10px;
+
+    margin: 4px 0;
+  }
+
+  .legend-dot {
+    width: 9px;
+    height: 9px;
+
+    margin-right: 6px;
+  }
+
   .leaflet-control-zoom {
-    margin-left: 10px !important;
-    margin-top: 10px !important;
+    margin-left: 8px !important;
+    margin-top: 8px !important;
   }
 
   .leaflet-control-zoom a {
-    width: 48px !important;
-    height: 48px !important;
-    line-height: 48px !important;
+    width: 46px !important;
+    height: 46px !important;
+    line-height: 46px !important;
   }
 
-  .station-label {
-    font-size: 12px;
-    padding: 6px 8px;
-  }
+}
 
+
+/* ==========================================================
+   NO MAP FLICKER
+========================================================== */
+
+.leaflet-tile {
+  image-rendering: auto;
+}
+
+.leaflet-fade-anim .leaflet-tile {
+  transition: opacity .15s linear;
 }
 
 </style>
@@ -707,7 +860,9 @@ body {
 </div>
 
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script
+  src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js">
+</script>
 
 
 <script>
@@ -721,7 +876,7 @@ const MAPY_API_KEY =
 
 
 /* ==========================================================
-   INITIAL VIEW
+   CONSTANTS
 ========================================================== */
 
 const SLOVAKIA_CENTER = [
@@ -729,43 +884,76 @@ const SLOVAKIA_CENTER = [
   19.70
 ];
 
+const INITIAL_ZOOM = 7.6;
+
+
+/*
+   Toto je zámerne iba Slovensko
+   + malý priestor okolo hranice.
+*/
+
+const SLOVAKIA_BOUNDS = [
+  [47.35, 16.70],
+  [49.75, 22.75]
+];
+
 
 /* ==========================================================
    MAP
 ========================================================== */
 
-const map = L.map("map", {
+const map =
+  L.map(
+    "map",
+    {
 
-  center: SLOVAKIA_CENTER,
+      center:
+        SLOVAKIA_CENTER,
 
-  zoom: 7,
+      zoom:
+        INITIAL_ZOOM,
 
-  /*
-     ŽIADNY maxBounds.
-     Voľné posúvanie mapy.
-  */
+      minZoom:
+        7.5,
 
-  minZoom: 0,
+      maxZoom:
+        19,
 
-  maxZoom: 19,
+      maxBounds:
+        SLOVAKIA_BOUNDS,
 
-  zoomControl: true,
+      maxBoundsViscosity:
+        1.0,
 
-  preferCanvas: true,
+      zoomControl:
+        true,
 
-  inertia: true,
+      preferCanvas:
+        true,
 
-  inertiaDeceleration: 3000,
+      inertia:
+        true,
 
-  wheelPxPerZoomLevel: 80,
+      inertiaDeceleration:
+        3000,
 
-  zoomAnimation: true,
+      wheelPxPerZoomLevel:
+        80,
 
-  fadeAnimation: true,
+      zoomAnimation:
+        true,
 
-  markerZoomAnimation: true
+      fadeAnimation:
+        false,
 
-});
+      markerZoomAnimation:
+        true,
+
+      worldCopyJump:
+        false
+
+    }
+  );
 
 
 /* ==========================================================
@@ -785,19 +973,26 @@ const mapyLayer =
     mapyUrl,
     {
 
-      minZoom: 0,
+      minZoom:
+        0,
 
-      maxZoom: 19,
+      maxZoom:
+        19,
 
-      tileSize: 256,
+      tileSize:
+        256,
 
-      crossOrigin: true,
+      noWrap:
+        true,
 
-      updateWhenIdle: true,
+      updateWhenIdle:
+        true,
 
-      updateWhenZooming: false,
+      updateWhenZooming:
+        false,
 
-      keepBuffer: 2,
+      keepBuffer:
+        2,
 
       attribution:
         '<a href="https://mapy.com/" target="_blank">' +
@@ -812,52 +1007,11 @@ mapyLayer.addTo(map);
 
 
 /* ==========================================================
-   MAPY.COM NAMES OVERLAY
-========================================================== */
-
-const namesUrl =
-  "https://api.mapy.com/v1/maptiles/names-overlay/256/" +
-  "{z}/{x}/{y}" +
-  "?apikey=" +
-  encodeURIComponent(MAPY_API_KEY) +
-  "&lang=sk";
-
-
-const namesLayer =
-  L.tileLayer(
-    namesUrl,
-    {
-
-      minZoom: 0,
-
-      maxZoom: 19,
-
-      tileSize: 256,
-
-      crossOrigin: true,
-
-      updateWhenIdle: true,
-
-      updateWhenZooming: false,
-
-      keepBuffer: 2,
-
-      opacity: 1,
-
-      attribution: ""
-
-    }
-  );
-
-
-namesLayer.addTo(map);
-
-
-/* ==========================================================
    MAP ERROR
 ========================================================== */
 
-let tileErrorShown = false;
+let tileErrorShown =
+  false;
 
 
 mapyLayer.on(
@@ -866,11 +1020,13 @@ mapyLayer.on(
 
     if (!tileErrorShown) {
 
-      tileErrorShown = true;
+      tileErrorShown =
+        true;
 
       document.getElementById(
         "mapError"
-      ).style.display = "block";
+      ).style.display =
+        "block";
 
     }
 
@@ -884,225 +1040,655 @@ mapyLayer.on(
 
     document.getElementById(
       "mapError"
-    ).style.display = "none";
+    ).style.display =
+      "none";
 
   }
 );
 
 
 /* ==========================================================
-   SLOVAKIA GEOJSON
+   CUSTOM DIMMER PANE
 ========================================================== */
 
-const SLOVAKIA_GEOJSON_URL =
-"https://cdn.jsdelivr.net/gh/johan/world.geo.json/countries/SVK.geo.json";
+map.createPane(
+  "slovakiaDimmerPane"
+);
 
-
-let slovakiaGeoJSON = null;
-
-let slovakiaBoundaryLayer = null;
-
-let slovakiaMaskLayer = null;
+map.getPane(
+  "slovakiaDimmerPane"
+).classList.add(
+  "slovakia-dimmer-pane"
+);
 
 
 /* ==========================================================
-   LOAD SLOVAKIA
+   REGION PANE
 ========================================================== */
 
-fetch(SLOVAKIA_GEOJSON_URL)
+map.createPane(
+  "regionsPane"
+);
 
-  .then(
-    response => {
+map.getPane(
+  "regionsPane"
+).classList.add(
+  "regions-pane"
+);
 
-      if (!response.ok) {
 
-        throw new Error(
-          "Slovakia GeoJSON error"
+/* ==========================================================
+   SVG DIMMER
+========================================================== */
+
+let dimmerSvg =
+  null;
+
+let dimmerMask =
+  null;
+
+let dimmerRect =
+  null;
+
+
+/*
+   Vytvorí SVG overlay.
+
+   Biela maska = stmavenie
+   Čierna maska = priehľadné miesto
+
+   Preto:
+   mimo Slovenska = tmavé
+   Slovensko = normálna mapa
+*/
+
+function createDimmerSVG() {
+
+  const pane =
+    map.getPane(
+      "slovakiaDimmerPane"
+    );
+
+
+  if (!pane) {
+    return;
+  }
+
+
+  pane.innerHTML = "";
+
+
+  dimmerSvg =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "svg"
+    );
+
+
+  dimmerSvg.setAttribute(
+    "class",
+    "slovakia-dimmer-svg"
+  );
+
+
+  dimmerSvg.setAttribute(
+    "width",
+    "100%"
+  );
+
+
+  dimmerSvg.setAttribute(
+    "height",
+    "100%"
+  );
+
+
+  const defs =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "defs"
+    );
+
+
+  const mask =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "mask"
+    );
+
+
+  mask.setAttribute(
+    "id",
+    "slovakiaMask"
+  );
+
+
+  mask.setAttribute(
+    "maskUnits",
+    "userSpaceOnUse"
+  );
+
+
+  const rect =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect"
+    );
+
+
+  rect.setAttribute(
+    "x",
+    "0"
+  );
+
+  rect.setAttribute(
+    "y",
+    "0"
+  );
+
+  rect.setAttribute(
+    "width",
+    "100%"
+  );
+
+  rect.setAttribute(
+    "height",
+    "100%"
+  );
+
+  rect.setAttribute(
+    "fill",
+    "white"
+  );
+
+
+  mask.appendChild(
+    rect
+  );
+
+
+  const slovakiaPath =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "path"
+    );
+
+
+  slovakiaPath.setAttribute(
+    "fill",
+    "black"
+  );
+
+
+  slovakiaPath.setAttribute(
+    "fill-rule",
+    "evenodd"
+  );
+
+
+  slovakiaPath.setAttribute(
+    "clip-rule",
+    "evenodd"
+  );
+
+
+  mask.appendChild(
+    slovakiaPath
+  );
+
+
+  defs.appendChild(
+    mask
+  );
+
+
+  dimmerSvg.appendChild(
+    defs
+  );
+
+
+  dimmerRect =
+    document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "rect"
+    );
+
+
+  dimmerRect.setAttribute(
+    "class",
+    "slovakia-dimmer-rect"
+  );
+
+
+  dimmerRect.setAttribute(
+    "x",
+    "0"
+  );
+
+  dimmerRect.setAttribute(
+    "y",
+    "0"
+  );
+
+  dimmerRect.setAttribute(
+    "width",
+    "100%"
+  );
+
+  dimmerRect.setAttribute(
+    "height",
+    "100%"
+  );
+
+
+  dimmerRect.setAttribute(
+    "mask",
+    "url(#slovakiaMask)"
+  );
+
+
+  dimmerSvg.appendChild(
+    dimmerRect
+  );
+
+
+  pane.appendChild(
+    dimmerSvg
+  );
+
+
+  dimmerMask =
+    slovakiaPath;
+
+}
+
+
+/* ==========================================================
+   GEOJSON
+========================================================== */
+
+const REGIONS_URL =
+"https://simplemaps.com/static/svg/country/sk/admin1/sk.json";
+
+
+let regionsGeoJSON =
+  null;
+
+let regionsLayer =
+  null;
+
+let slovakiaBoundary =
+  null;
+
+
+/* ==========================================================
+   GEOJSON HELPERS
+========================================================== */
+
+function coordinateRingToSvgPath(
+  ring
+) {
+
+  if (
+    !ring ||
+    ring.length < 2
+  ) {
+
+    return "";
+
+  }
+
+
+  let d = "";
+
+
+  ring.forEach(
+    function(point, index) {
+
+      const lat =
+        point[1];
+
+      const lng =
+        point[0];
+
+
+      const pixel =
+        map.latLngToContainerPoint(
+          [
+            lat,
+            lng
+          ]
         );
 
+
+      if (index === 0) {
+
+        d +=
+          "M " +
+          pixel.x +
+          " " +
+          pixel.y +
+          " ";
+
       }
+      else {
 
-      return response.json();
+        d +=
+          "L " +
+          pixel.x +
+          " " +
+          pixel.y +
+          " ";
 
-    }
-  )
-
-  .then(
-    data => {
-
-      slovakiaGeoJSON = data;
-
-      createSlovakiaLayers();
-
-    }
-  )
-
-  .catch(
-    error => {
-
-      console.error(
-        "Slovakia boundary error:",
-        error
-      );
+      }
 
     }
   );
 
 
-/* ==========================================================
-   CREATE SLOVAKIA BORDER + WHITE MASK
-========================================================== */
+  d += "Z ";
 
-function createSlovakiaLayers() {
-
-  if (!slovakiaGeoJSON) {
-    return;
-  }
-
-
-  /*
-     Slovak border
-  */
-
-  slovakiaBoundaryLayer =
-    L.geoJSON(
-      slovakiaGeoJSON,
-      {
-
-        style: {
-
-          color: "#173d31",
-
-          weight: 3,
-
-          opacity: .9,
-
-          fill: false
-
-        },
-
-        interactive: false
-
-      }
-    );
-
-
-  slovakiaBoundaryLayer.addTo(map);
-
-
-  /*
-     White world with Slovakia cut out.
-  */
-
-  const worldRing = [
-
-    [90, -180],
-
-    [90, 180],
-
-    [-90, 180],
-
-    [-90, -180],
-
-    [90, -180]
-
-  ];
-
-
-  let coordinates;
-
-
-  if (
-    slovakiaGeoJSON.geometry &&
-    slovakiaGeoJSON.geometry.type === "Polygon"
-  ) {
-
-    coordinates =
-      slovakiaGeoJSON.geometry.coordinates;
-
-  }
-
-
-  if (
-    slovakiaGeoJSON.geometry &&
-    slovakiaGeoJSON.geometry.type === "MultiPolygon"
-  ) {
-
-    coordinates =
-      slovakiaGeoJSON.geometry.coordinates[0];
-
-  }
-
-
-  if (!coordinates) {
-    return;
-  }
-
-
-  const slovakiaHole =
-    coordinates[0].map(
-      point => [
-        point[1],
-        point[0]
-      ]
-    );
-
-
-  slovakiaMaskLayer =
-    L.polygon(
-      [
-        worldRing,
-        slovakiaHole
-      ],
-      {
-
-        stroke: false,
-
-        fillColor: "white",
-
-        fillOpacity: 1,
-
-        fillRule: "evenodd",
-
-        interactive: false
-
-      }
-    );
-
-
-  slovakiaMaskLayer.addTo(map);
-
-
-  /*
-     Maska musí byť nad mapou,
-     ale pod hranicou a markermi.
-  */
-
-  const maskPane =
-    slovakiaMaskLayer.getPane();
-
-  if (maskPane) {
-
-    maskPane.style.zIndex = 700;
-
-  }
-
-
-  const borderPane =
-    slovakiaBoundaryLayer.getPane();
-
-  if (borderPane) {
-
-    borderPane.style.zIndex = 850;
-
-  }
-
-
-  slovakiaMaskLayer.bringToFront();
-
-  slovakiaBoundaryLayer.bringToFront();
+  return d;
 
 }
+
+
+/* ==========================================================
+   GEOJSON GEOMETRY TO SVG PATH
+========================================================== */
+
+function geometryToSvgPath(
+  geometry
+) {
+
+  if (!geometry) {
+    return "";
+  }
+
+
+  let d = "";
+
+
+  if (
+    geometry.type ===
+    "Polygon"
+  ) {
+
+    geometry.coordinates
+      .forEach(
+        ring => {
+
+          d +=
+            coordinateRingToSvgPath(
+              ring
+            );
+
+        }
+      );
+
+  }
+
+
+  if (
+    geometry.type ===
+    "MultiPolygon"
+  ) {
+
+    geometry.coordinates
+      .forEach(
+        polygon => {
+
+          polygon.forEach(
+            ring => {
+
+              d +=
+                coordinateRingToSvgPath(
+                  ring
+                );
+
+            }
+          );
+
+        }
+      );
+
+  }
+
+
+  return d;
+
+}
+
+
+/* ==========================================================
+   UPDATE DIMMER
+========================================================== */
+
+function updateDimmer() {
+
+  if (
+    !dimmerMask ||
+    !regionsGeoJSON
+  ) {
+
+    return;
+
+  }
+
+
+  const slovakiaFeatures =
+    regionsGeoJSON.features;
+
+
+  /*
+     Všetkých 8 krajov tvorí Slovensko.
+     Cesty hraníc medzi krajmi nechceme
+     používať ako masku jednotlivo.
+
+     Preto spojíme všetky geometrie
+     do jedného SVG path.
+  */
+
+  let path = "";
+
+
+  slovakiaFeatures.forEach(
+    feature => {
+
+      path +=
+        geometryToSvgPath(
+          feature.geometry
+        );
+
+    }
+  );
+
+
+  dimmerMask.setAttribute(
+    "d",
+    path
+  );
+
+
+  const size =
+    map.getSize();
+
+
+  dimmerSvg.setAttribute(
+    "viewBox",
+    `0 0 ${size.x} ${size.y}`
+  );
+
+}
+
+
+/* ==========================================================
+   LOAD REGIONS
+========================================================== */
+
+fetch(
+  REGIONS_URL
+)
+
+.then(
+  response => {
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Regions GeoJSON error"
+      );
+
+    }
+
+    return response.json();
+
+  }
+)
+
+.then(
+  data => {
+
+    regionsGeoJSON =
+      data;
+
+
+    createDimmerSVG();
+
+
+    /*
+       Ostatné kraje sivé.
+       Trenčiansky kraj bez sivej výplne.
+    */
+
+    regionsLayer =
+      L.geoJSON(
+        data,
+        {
+
+          pane:
+            "regionsPane",
+
+          style:
+            function(feature) {
+
+              if (
+                feature.properties &&
+                feature.properties.id ===
+                "SKTC"
+              ) {
+
+                return {
+
+                  fillColor:
+                    "transparent",
+
+                  fillOpacity:
+                    0,
+
+                  color:
+                    "#173d31",
+
+                  weight:
+                    3,
+
+                  opacity:
+                    1
+
+                };
+
+              }
+
+
+              return {
+
+                fillColor:
+                  "#858e8a",
+
+                fillOpacity:
+                  .58,
+
+                color:
+                  "#69736e",
+
+                weight:
+                  1.5,
+
+                opacity:
+                  .75
+
+              };
+
+            },
+
+          interactive:
+            false
+
+        }
+      );
+
+
+    regionsLayer.addTo(
+      map
+    );
+
+
+    /*
+       Samostatná hranica Slovenska.
+    */
+
+    slovakiaBoundary =
+      L.geoJSON(
+        data,
+        {
+
+          pane:
+            "regionsPane",
+
+          style:
+            {
+
+              fill:
+                false,
+
+              color:
+                "#173d31",
+
+              weight:
+                2.5,
+
+              opacity:
+                .95
+
+            },
+
+          interactive:
+            false
+
+        }
+      );
+
+
+    slovakiaBoundary.addTo(
+      map
+    );
+
+
+    updateDimmer();
+
+  }
+)
+
+.catch(
+  error => {
+
+    console.error(
+      "GeoJSON error:",
+      error
+    );
+
+  }
+);
 
 
 /* ==========================================================
@@ -1112,143 +1698,325 @@ function createSlovakiaLayers() {
 const stations = [
 
   {
-    name: "E-BIKE POINT Trenčín",
-    city: "Trenčín",
-    lat: 48.894,
-    lng: 18.039,
-    percent: 78,
-    solar: 2.4,
-    battery: 10
+    name:
+      "E-BIKE POINT Trenčín",
+
+    city:
+      "Trenčín",
+
+    lat:
+      48.894,
+
+    lng:
+      18.039,
+
+    percent:
+      78,
+
+    solar:
+      2.4,
+
+    battery:
+      10
   },
 
   {
-    name: "E-BIKE POINT Dubnica nad Váhom",
-    city: "Dubnica nad Váhom",
-    lat: 48.960,
-    lng: 18.166,
-    percent: 64,
-    solar: 2.2,
-    battery: 8
+    name:
+      "E-BIKE POINT Dubnica nad Váhom",
+
+    city:
+      "Dubnica nad Váhom",
+
+    lat:
+      48.960,
+
+    lng:
+      18.166,
+
+    percent:
+      64,
+
+    solar:
+      2.2,
+
+    battery:
+      8
   },
 
   {
-    name: "E-BIKE POINT Ilava",
-    city: "Ilava",
-    lat: 49.000,
-    lng: 18.235,
-    percent: 54,
-    solar: 2.4,
-    battery: 10
+    name:
+      "E-BIKE POINT Ilava",
+
+    city:
+      "Ilava",
+
+    lat:
+      49.000,
+
+    lng:
+      18.235,
+
+    percent:
+      54,
+
+    solar:
+      2.4,
+
+    battery:
+      10
   },
 
   {
-    name: "E-BIKE POINT Púchov",
-    city: "Púchov",
-    lat: 49.124,
-    lng: 18.326,
-    percent: 37,
-    solar: 2.2,
-    battery: 8
+    name:
+      "E-BIKE POINT Púchov",
+
+    city:
+      "Púchov",
+
+    lat:
+      49.124,
+
+    lng:
+      18.326,
+
+    percent:
+      37,
+
+    solar:
+      2.2,
+
+    battery:
+      8
   },
 
   {
-    name: "E-BIKE POINT Považská Bystrica",
-    city: "Považská Bystrica",
-    lat: 49.115,
-    lng: 18.448,
-    percent: 82,
-    solar: 2.4,
-    battery: 10
+    name:
+      "E-BIKE POINT Považská Bystrica",
+
+    city:
+      "Považská Bystrica",
+
+    lat:
+      49.115,
+
+    lng:
+      18.448,
+
+    percent:
+      82,
+
+    solar:
+      2.4,
+
+    battery:
+      10
   },
 
   {
-    name: "E-BIKE POINT Nové Mesto nad Váhom",
-    city: "Nové Mesto nad Váhom",
-    lat: 48.757,
-    lng: 17.830,
-    percent: 68,
-    solar: 2.2,
-    battery: 8
+    name:
+      "E-BIKE POINT Nové Mesto nad Váhom",
+
+    city:
+      "Nové Mesto nad Váhom",
+
+    lat:
+      48.757,
+
+    lng:
+      17.830,
+
+    percent:
+      68,
+
+    solar:
+      2.2,
+
+    battery:
+      8
   },
 
   {
-    name: "E-BIKE POINT Beckov",
-    city: "Beckov",
-    lat: 48.789,
-    lng: 17.896,
-    percent: 43,
-    solar: 2.0,
-    battery: 8
+    name:
+      "E-BIKE POINT Beckov",
+
+    city:
+      "Beckov",
+
+    lat:
+      48.789,
+
+    lng:
+      17.896,
+
+    percent:
+      43,
+
+    solar:
+      2.0,
+
+    battery:
+      8
   },
 
   {
-    name: "E-BIKE POINT Trenčianske Teplice",
-    city: "Trenčianske Teplice",
-    lat: 48.910,
-    lng: 18.168,
-    percent: 72,
-    solar: 2.2,
-    battery: 10
+    name:
+      "E-BIKE POINT Trenčianske Teplice",
+
+    city:
+      "Trenčianske Teplice",
+
+    lat:
+      48.910,
+
+    lng:
+      18.168,
+
+    percent:
+      72,
+
+    solar:
+      2.2,
+
+    battery:
+      10
   },
 
   {
-    name: "E-BIKE POINT Nemšová",
-    city: "Nemšová",
-    lat: 48.967,
-    lng: 18.118,
-    percent: 91,
-    solar: 2.4,
-    battery: 10
+    name:
+      "E-BIKE POINT Nemšová",
+
+    city:
+      "Nemšová",
+
+    lat:
+      48.967,
+
+    lng:
+      18.118,
+
+    percent:
+      91,
+
+    solar:
+      2.4,
+
+    battery:
+      10
   },
 
   {
-    name: "E-BIKE POINT Bojnice",
-    city: "Bojnice",
-    lat: 48.778,
-    lng: 18.585,
-    percent: 19,
-    solar: 2.4,
-    battery: 10
+    name:
+      "E-BIKE POINT Bojnice",
+
+    city:
+      "Bojnice",
+
+    lat:
+      48.778,
+
+    lng:
+      18.585,
+
+    percent:
+      19,
+
+    solar:
+      2.4,
+
+    battery:
+      10
   },
 
   {
-    name: "E-BIKE POINT Prievidza",
-    city: "Prievidza",
-    lat: 48.774,
-    lng: 18.627,
-    percent: 58,
-    solar: 2.5,
-    battery: 10
+    name:
+      "E-BIKE POINT Prievidza",
+
+    city:
+      "Prievidza",
+
+    lat:
+      48.774,
+
+    lng:
+      18.627,
+
+    percent:
+      58,
+
+    solar:
+      2.5,
+
+    battery:
+      10
   },
 
   {
-    name: "E-BIKE POINT Handlová",
-    city: "Handlová",
-    lat: 48.727,
-    lng: 18.760,
-    percent: 74,
-    solar: 2.2,
-    battery: 8
+    name:
+      "E-BIKE POINT Handlová",
+
+    city:
+      "Handlová",
+
+    lat:
+      48.727,
+
+    lng:
+      18.760,
+
+    percent:
+      74,
+
+    solar:
+      2.2,
+
+    battery:
+      8
   },
 
   {
-    name: "E-BIKE POINT Partizánske",
-    city: "Partizánske",
-    lat: 48.628,
-    lng: 18.384,
-    percent: 34,
-    solar: 2.0,
-    battery: 8
+    name:
+      "E-BIKE POINT Partizánske",
+
+    city:
+      "Partizánske",
+
+    lat:
+      48.628,
+
+    lng:
+      18.384,
+
+    percent:
+      34,
+
+    solar:
+      2.0,
+
+    battery:
+      8
   },
 
   {
-    name: "E-BIKE POINT Bánovce nad Bebravou",
-    city: "Bánovce nad Bebravou",
-    lat: 48.720,
-    lng: 18.260,
-    percent: 63,
-    solar: 2.2,
-    battery: 10
+    name:
+      "E-BIKE POINT Bánovce nad Bebravou",
+
+    city:
+      "Bánovce nad Bebravou",
+
+    lat:
+      48.720,
+
+    lng:
+      18.260,
+
+    percent:
+      63,
+
+    solar:
+      2.2,
+
+    battery:
+      10
   }
 
 ];
@@ -1258,18 +2026,32 @@ const stations = [
    STATUS
 ========================================================== */
 
-function getStatusClass(percent) {
+function getStatusClass(
+  percent
+) {
 
-  if (percent <= 20) {
+  if (
+    percent <= 20
+  ) {
+
     return "status-red";
+
   }
 
-  if (percent <= 40) {
+  if (
+    percent <= 40
+  ) {
+
     return "status-orange";
+
   }
 
-  if (percent <= 60) {
+  if (
+    percent <= 60
+  ) {
+
     return "status-yellow";
+
   }
 
   return "status-green";
@@ -1281,19 +2063,26 @@ function getStatusClass(percent) {
    POPUP
 ========================================================== */
 
-function createPopup(station) {
+function createPopup(
+  station
+) {
 
   const chargeCapacity =
-    station.battery * 1000 * 0.90;
+    station.battery *
+    1000 *
+    0.90;
+
 
   const ebikeBattery =
     800;
+
 
   const estimatedCharges =
     Math.floor(
       chargeCapacity /
       ebikeBattery
     );
+
 
   const availableEnergy =
     Math.round(
@@ -1302,11 +2091,13 @@ function createPopup(station) {
       100
     );
 
+
   const currentCharges =
     Math.floor(
       availableEnergy /
       ebikeBattery
     );
+
 
   const statusClass =
     getStatusClass(
@@ -1440,17 +2231,23 @@ function createPopup(station) {
 ========================================================== */
 
 const markerLayer =
-  L.layerGroup().addTo(map);
+  L.layerGroup().addTo(
+    map
+  );
 
 const clusterLayer =
-  L.layerGroup().addTo(map);
+  L.layerGroup().addTo(
+    map
+  );
 
 
 /* ==========================================================
    CREATE INDIVIDUAL MARKER
 ========================================================== */
 
-function createStationMarker(station) {
+function createStationMarker(
+  station
+) {
 
   const statusClass =
     getStatusClass(
@@ -1461,7 +2258,8 @@ function createStationMarker(station) {
   const icon =
     L.divIcon({
 
-      className: "",
+      className:
+        "",
 
       html: `
 
@@ -1488,20 +2286,14 @@ function createStationMarker(station) {
 
       `,
 
-      iconSize: [
-        42,
-        32
-      ],
+      iconSize:
+        [42, 32],
 
-      iconAnchor: [
-        21,
-        16
-      ],
+      iconAnchor:
+        [21, 16],
 
-      popupAnchor: [
-        0,
-        -15
-      ]
+      popupAnchor:
+        [0, -15]
 
     });
 
@@ -1514,25 +2306,33 @@ function createStationMarker(station) {
       ],
       {
 
-        icon: icon,
+        icon:
+          icon,
 
-        riseOnHover: true,
+        riseOnHover:
+          true,
 
-        zIndexOffset: 1000
+        zIndexOffset:
+          1000
 
       }
     );
 
 
   marker.bindPopup(
-    createPopup(station),
+    createPopup(
+      station
+    ),
     {
 
-      maxWidth: 300,
+      maxWidth:
+        300,
 
-      closeButton: true,
+      closeButton:
+        true,
 
-      autoPan: true,
+      autoPan:
+        true,
 
       autoPanPaddingTopLeft:
         [20, 100],
@@ -1565,7 +2365,8 @@ function createClusterMarker(
   const icon =
     L.divIcon({
 
-      className: "",
+      className:
+        "",
 
       html: `
 
@@ -1575,15 +2376,11 @@ function createClusterMarker(
 
       `,
 
-      iconSize: [
-        46,
-        46
-      ],
+      iconSize:
+        [46, 46],
 
-      iconAnchor: [
-        23,
-        23
-      ]
+      iconAnchor:
+        [23, 23]
 
     });
 
@@ -1593,9 +2390,11 @@ function createClusterMarker(
       latlng,
       {
 
-        icon: icon,
+        icon:
+          icon,
 
-        zIndexOffset: 1200
+        zIndexOffset:
+          1200
 
       }
     );
@@ -1615,14 +2414,17 @@ function createClusterMarker(
           )
         );
 
+
       map.fitBounds(
         bounds,
         {
-          padding: [
-            80,
-            80
-          ],
-          maxZoom: 10
+
+          padding:
+            [80, 80],
+
+          maxZoom:
+            10
+
         }
       );
 
@@ -1650,12 +2452,9 @@ function renderMarkers() {
     map.getZoom();
 
 
-  /*
-     Od zoom 7 vyššie:
-     normálne jednotlivé nabíjačky.
-  */
-
-  if (zoom >= 7) {
+  if (
+    zoom >= 7
+  ) {
 
     stations.forEach(
       station => {
@@ -1673,11 +2472,6 @@ function renderMarkers() {
 
   }
 
-
-  /*
-     Pri oddialení zoskupujeme
-     stanice podľa pixelovej mriežky.
-  */
 
   const gridSize =
     zoom <= 3
@@ -1708,15 +2502,19 @@ function renderMarkers() {
 
       const key =
         Math.floor(
-          point.x / gridSize
+          point.x /
+          gridSize
         ) +
         "_" +
         Math.floor(
-          point.y / gridSize
+          point.y /
+          gridSize
         );
 
 
-      if (!groups.has(key)) {
+      if (
+        !groups.has(key)
+      ) {
 
         groups.set(
           key,
@@ -1728,7 +2526,9 @@ function renderMarkers() {
 
       groups
         .get(key)
-        .push(station);
+        .push(
+          station
+        );
 
     }
   );
@@ -1737,7 +2537,9 @@ function renderMarkers() {
   groups.forEach(
     items => {
 
-      if (items.length === 1) {
+      if (
+        items.length === 1
+      ) {
 
         clusterLayer.addLayer(
           createStationMarker(
@@ -1752,18 +2554,28 @@ function renderMarkers() {
 
       const lat =
         items.reduce(
-          (sum, station) =>
-            sum + station.lat,
+          (
+            sum,
+            station
+          ) =>
+            sum +
+            station.lat,
           0
-        ) / items.length;
+        ) /
+        items.length;
 
 
       const lng =
         items.reduce(
-          (sum, station) =>
-            sum + station.lng,
+          (
+            sum,
+            station
+          ) =>
+            sum +
+            station.lng,
           0
-        ) / items.length;
+        ) /
+        items.length;
 
 
       clusterLayer.addLayer(
@@ -1792,37 +2604,24 @@ function updateMarkerSize() {
     map.getZoom();
 
 
-  let scale = 1;
+  let scale =
+    1;
 
 
-  if (zoom <= 3) {
+  if (
+    zoom <= 7
+  ) {
 
-    scale = .42;
-
-  }
-  else if (zoom <= 4) {
-
-    scale = .50;
-
-  }
-  else if (zoom <= 5) {
-
-    scale = .60;
+    scale =
+      .84;
 
   }
-  else if (zoom <= 6) {
+  else if (
+    zoom <= 8
+  ) {
 
-    scale = .72;
-
-  }
-  else if (zoom <= 7) {
-
-    scale = .84;
-
-  }
-  else if (zoom <= 8) {
-
-    scale = .92;
+    scale =
+      .92;
 
   }
 
@@ -1873,13 +2672,12 @@ function updateLabels() {
   );
 
 
-  /*
-     Pri veľkom oddialení
-     žiadne názvy.
-  */
+  if (
+    zoom < 8
+  ) {
 
-  if (zoom < 8) {
     return;
+
   }
 
 
@@ -1906,8 +2704,12 @@ function avoidLabelCollisions() {
     map.getZoom();
 
 
-  if (zoom < 8) {
+  if (
+    zoom < 8
+  ) {
+
     return;
+
   }
 
 
@@ -1919,7 +2721,8 @@ function avoidLabelCollisions() {
     );
 
 
-  const visibleRects = [];
+  const visibleRects =
+    [];
 
 
   labels.forEach(
@@ -1961,9 +2764,12 @@ function avoidLabelCollisions() {
           );
 
 
-        if (overlaps) {
+        if (
+          overlaps
+        ) {
 
-          collision = true;
+          collision =
+            true;
 
           break;
 
@@ -1972,7 +2778,9 @@ function avoidLabelCollisions() {
       }
 
 
-      if (collision) {
+      if (
+        collision
+      ) {
 
         label.style.display =
           "none";
@@ -1993,7 +2801,7 @@ function avoidLabelCollisions() {
 
 
 /* ==========================================================
-   UPDATE UI
+   UPDATE EVERYTHING
 ========================================================== */
 
 function updateMapUI() {
@@ -2005,6 +2813,9 @@ function updateMapUI() {
   updateLabels();
 
 
+  updateDimmer();
+
+
   requestAnimationFrame(
     function() {
 
@@ -2012,34 +2823,6 @@ function updateMapUI() {
 
     }
   );
-
-
-  /*
-     Správne poradie vrstiev:
-     mapa
-     → names overlay
-     → biela maska
-     → hranica
-     → markery
-  */
-
-  if (slovakiaMaskLayer) {
-
-    slovakiaMaskLayer.bringToFront();
-
-  }
-
-
-  if (slovakiaBoundaryLayer) {
-
-    slovakiaBoundaryLayer.bringToFront();
-
-  }
-
-
-  clusterLayer.bringToFront();
-
-  markerLayer.bringToFront();
 
 }
 
@@ -2069,8 +2852,25 @@ map.on(
 
 
 map.on(
+  "move",
+  function() {
+
+    /*
+       Počas pohybu aktualizujeme masku,
+       aby sa nikdy nerozbila pri posúvaní.
+    */
+
+    updateDimmer();
+
+  }
+);
+
+
+map.on(
   "resize",
   function() {
+
+    updateDimmer();
 
     updateMapUI();
 
@@ -2084,7 +2884,7 @@ map.on(
 
 map.setView(
   SLOVAKIA_CENTER,
-  7
+  INITIAL_ZOOM
 );
 
 
@@ -2103,7 +2903,7 @@ map.whenReady(
         updateMapUI();
 
       },
-      500
+      300
     );
 
   }
