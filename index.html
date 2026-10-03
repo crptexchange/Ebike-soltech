@@ -53,15 +53,11 @@ body {
 .header {
   height: 125px;
   min-height: 125px;
-
   background: white;
-
   display: flex;
   flex-direction: column;
   justify-content: center;
-
   padding: 15px 28px;
-
   z-index: 3000;
 }
 
@@ -87,9 +83,7 @@ body {
 .subtitle {
   margin-left: 3px;
   margin-top: 4px;
-
   color: #718078;
-
   font-size: 18px;
   font-weight: 600;
 }
@@ -113,48 +107,7 @@ body {
 
 
 /* ==========================================================
-   WHITE MASK OUTSIDE SLOVAKIA
-========================================================== */
-
-/*
-   Táto vrstva prekryje všetko mimo Slovenska.
-   Slovensko ostane ako otvorený "výrez".
-*/
-
-#slovakiaMask {
-  position: absolute;
-
-  inset: 0;
-
-  z-index: 700;
-
-  pointer-events: none;
-
-  background: white;
-}
-
-
-/* ==========================================================
-   SLOVAKIA BORDER
-========================================================== */
-
-.slovakia-border {
-  fill: none;
-
-  stroke: #173d31;
-
-  stroke-width: 3;
-
-  stroke-opacity: .85;
-
-  vector-effect: non-scaling-stroke;
-
-  pointer-events: none;
-}
-
-
-/* ==========================================================
-   ZOOM CONTROL
+   ZOOM
 ========================================================== */
 
 .leaflet-control-zoom {
@@ -169,15 +122,10 @@ body {
 .leaflet-control-zoom a {
   width: 52px !important;
   height: 52px !important;
-
   line-height: 52px !important;
-
   font-size: 30px !important;
-
   color: #111 !important;
-
   background: white !important;
-
   border: none !important;
 }
 
@@ -196,14 +144,10 @@ body {
 
 .charger-wrapper {
   position: relative;
-
   width: 42px;
   height: 32px;
-
   transform: translate(-50%, -50%);
-
-  transition:
-    transform .18s ease;
+  transition: transform .18s ease;
 }
 
 .charger-body {
@@ -224,7 +168,6 @@ body {
     inset 0 0 0 1px rgba(0,0,0,.15);
 
   display: flex;
-
   justify-content: center;
   align-items: center;
 }
@@ -247,11 +190,8 @@ body {
 
 .charger-bolt {
   color: white;
-
   font-size: 19px;
-
   font-weight: 900;
-
   line-height: 1;
 
   text-shadow:
@@ -281,6 +221,40 @@ body {
 
 
 /* ==========================================================
+   CLUSTER
+========================================================== */
+
+.station-cluster {
+  width: 46px;
+  height: 46px;
+
+  border-radius: 50%;
+
+  background: #173d31;
+
+  border: 4px solid white;
+
+  box-shadow:
+    0 4px 12px rgba(0,0,0,.30);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: white;
+
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.station-cluster::before {
+  content: "⚡";
+  font-size: 14px;
+  margin-right: 2px;
+}
+
+
+/* ==========================================================
    STATION LABEL
 ========================================================== */
 
@@ -297,7 +271,6 @@ body {
   color: #173d31;
 
   font-size: 13px;
-
   font-weight: 800;
 
   padding: 7px 10px;
@@ -310,13 +283,12 @@ body {
   border: 1px solid rgba(23,61,49,.08);
 
   opacity: 0;
-
   visibility: hidden;
+
+  pointer-events: none;
 
   transition:
     opacity .18s ease;
-
-  pointer-events: none;
 }
 
 .station-label.visible {
@@ -338,15 +310,12 @@ body {
 
 .leaflet-popup-content {
   margin: 0 !important;
-
   width: 285px !important;
 }
 
 .station-popup {
   overflow: hidden;
-
   border-radius: 18px;
-
   background: white;
 }
 
@@ -355,7 +324,6 @@ body {
   height: 135px;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
 
@@ -367,7 +335,6 @@ body {
     );
 
   color: white;
-
   font-size: 46px;
 }
 
@@ -377,41 +344,31 @@ body {
 
 .popup-title {
   font-size: 20px;
-
   font-weight: 800;
-
   color: #173d31;
-
   margin-bottom: 3px;
 }
 
 .popup-location {
   color: #7a8781;
-
   font-size: 13px;
-
   margin-bottom: 14px;
 }
 
 .energy-row {
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
   margin-bottom: 9px;
 }
 
 .energy-label {
   color: #64736c;
-
   font-size: 13px;
 }
 
 .energy-value {
   font-weight: 800;
-
   color: #173d31;
 }
 
@@ -429,7 +386,6 @@ body {
 
 .progress-inner {
   height: 100%;
-
   border-radius: 10px;
 }
 
@@ -453,7 +409,6 @@ body {
 
 .info-label {
   color: #7a8781;
-
   font-size: 11px;
 }
 
@@ -557,7 +512,7 @@ body {
 
 
 /* ==========================================================
-   MAP ERROR
+   ERROR
 ========================================================== */
 
 .map-error {
@@ -588,7 +543,6 @@ body {
 
 .map-error-icon {
   font-size: 42px;
-
   margin-bottom: 10px;
 }
 
@@ -620,7 +574,6 @@ body {
   .header {
     height: 115px;
     min-height: 115px;
-
     padding: 14px 20px;
   }
 
@@ -661,13 +614,11 @@ body {
   .leaflet-control-zoom a {
     width: 48px !important;
     height: 48px !important;
-
     line-height: 48px !important;
   }
 
   .station-label {
     font-size: 12px;
-
     padding: 6px 8px;
   }
 
@@ -682,10 +633,6 @@ body {
 
 <div id="app">
 
-
-<!-- ======================================================
-     HEADER
-====================================================== -->
 
 <header class="header">
 
@@ -708,16 +655,7 @@ body {
 </header>
 
 
-<!-- ======================================================
-     MAP
-====================================================== -->
-
 <div id="map">
-
-
-  <!-- ====================================================
-       LEGEND
-  ===================================================== -->
 
   <div class="legend">
 
@@ -748,10 +686,6 @@ body {
   </div>
 
 
-  <!-- ====================================================
-       ERROR
-  ===================================================== -->
-
   <div id="mapError" class="map-error">
 
     <div class="map-error-icon">
@@ -768,7 +702,6 @@ body {
 
   </div>
 
-
 </div>
 
 </div>
@@ -784,7 +717,7 @@ body {
 ========================================================== */
 
 const MAPY_API_KEY =
-"2Saa1wL54-KI04PxOV13VoXr8Z5Eff-wxYWUG_-vUkg";
+"Ld1wDiRmzkSKYG09mz9BiWl-ti-D2b_eEGv4i9eoBe0";
 
 
 /* ==========================================================
@@ -808,8 +741,8 @@ const map = L.map("map", {
   zoom: 7,
 
   /*
-     0 = veľmi veľký oddialený pohľad
-     19 = detailný zoom
+     ŽIADNY maxBounds.
+     Voľné posúvanie mapy.
   */
 
   minZoom: 0,
@@ -847,31 +780,32 @@ const mapyUrl =
   "&lang=sk";
 
 
-const mapyLayer = L.tileLayer(
-  mapyUrl,
-  {
+const mapyLayer =
+  L.tileLayer(
+    mapyUrl,
+    {
 
-    minZoom: 0,
+      minZoom: 0,
 
-    maxZoom: 19,
+      maxZoom: 19,
 
-    tileSize: 256,
+      tileSize: 256,
 
-    crossOrigin: true,
+      crossOrigin: true,
 
-    updateWhenIdle: true,
+      updateWhenIdle: true,
 
-    updateWhenZooming: false,
+      updateWhenZooming: false,
 
-    keepBuffer: 2,
+      keepBuffer: 2,
 
-    attribution:
-      '<a href="https://mapy.com/" target="_blank">' +
-      'Mapy.com' +
-      '</a> © Seznam.cz a ďalší'
+      attribution:
+        '<a href="https://mapy.com/" target="_blank">' +
+        'Mapy.com' +
+        '</a> © Seznam.cz a ďalší'
 
-  }
-);
+    }
+  );
 
 
 mapyLayer.addTo(map);
@@ -889,53 +823,46 @@ const namesUrl =
   "&lang=sk";
 
 
-const namesLayer = L.tileLayer(
-  namesUrl,
-  {
+const namesLayer =
+  L.tileLayer(
+    namesUrl,
+    {
 
-    minZoom: 0,
+      minZoom: 0,
 
-    maxZoom: 19,
+      maxZoom: 19,
 
-    tileSize: 256,
+      tileSize: 256,
 
-    crossOrigin: true,
+      crossOrigin: true,
 
-    updateWhenIdle: true,
+      updateWhenIdle: true,
 
-    updateWhenZooming: false,
+      updateWhenZooming: false,
 
-    keepBuffer: 2,
+      keepBuffer: 2,
 
-    opacity: 1,
+      opacity: 1,
 
-    attribution: ""
+      attribution: ""
 
-  }
-);
+    }
+  );
 
-
-/*
-   Names overlay dávame nad outdoor mapu.
-*/
 
 namesLayer.addTo(map);
 
 
 /* ==========================================================
-   TILE ERROR
+   MAP ERROR
 ========================================================== */
 
 let tileErrorShown = false;
 
+
 mapyLayer.on(
   "tileerror",
-  function(e) {
-
-    console.error(
-      "Mapy.com tile error:",
-      e
-    );
+  function() {
 
     if (!tileErrorShown) {
 
@@ -964,14 +891,8 @@ mapyLayer.on(
 
 
 /* ==========================================================
-   SLOVAKIA BORDER DATA
+   SLOVAKIA GEOJSON
 ========================================================== */
-
-/*
-   Hranica Slovenska.
-
-   Použijeme verejný GeoJSON súbor.
-*/
 
 const SLOVAKIA_GEOJSON_URL =
 "https://cdn.jsdelivr.net/gh/johan/world.geo.json/countries/SVK.geo.json";
@@ -985,7 +906,7 @@ let slovakiaMaskLayer = null;
 
 
 /* ==========================================================
-   LOAD SLOVAKIA BORDER
+   LOAD SLOVAKIA
 ========================================================== */
 
 fetch(SLOVAKIA_GEOJSON_URL)
@@ -1013,8 +934,6 @@ fetch(SLOVAKIA_GEOJSON_URL)
 
       createSlovakiaLayers();
 
-      updateSlovakiaMask();
-
     }
   )
 
@@ -1022,7 +941,7 @@ fetch(SLOVAKIA_GEOJSON_URL)
     error => {
 
       console.error(
-        "Nepodarilo sa načítať hranicu Slovenska:",
+        "Slovakia boundary error:",
         error
       );
 
@@ -1031,7 +950,7 @@ fetch(SLOVAKIA_GEOJSON_URL)
 
 
 /* ==========================================================
-   CREATE SLOVAKIA LAYERS
+   CREATE SLOVAKIA BORDER + WHITE MASK
 ========================================================== */
 
 function createSlovakiaLayers() {
@@ -1042,7 +961,7 @@ function createSlovakiaLayers() {
 
 
   /*
-     Hranica Slovenska.
+     Slovak border
   */
 
   slovakiaBoundaryLayer =
@@ -1072,51 +991,8 @@ function createSlovakiaLayers() {
 
 
   /*
-     Hranica musí byť nad maskou.
+     White world with Slovakia cut out.
   */
-
-  if (
-    slovakiaBoundaryLayer.getPane()
-  ) {
-
-    slovakiaBoundaryLayer
-      .getPane()
-      .style.zIndex = 850;
-
-  }
-
-}
-
-
-/* ==========================================================
-   WHITE MASK
-========================================================== */
-
-/*
-   Vytvoríme obrovský polygon sveta
-   s dierou v tvare Slovenska.
-
-   Výsledok:
-
-   mimo Slovenska = biela
-   Slovensko = mapa
-*/
-
-function updateSlovakiaMask() {
-
-  if (!slovakiaGeoJSON) {
-    return;
-  }
-
-
-  if (slovakiaMaskLayer) {
-
-    map.removeLayer(
-      slovakiaMaskLayer
-    );
-
-  }
-
 
   const worldRing = [
 
@@ -1133,20 +1009,15 @@ function updateSlovakiaMask() {
   ];
 
 
-  let slovakiaCoordinates;
+  let coordinates;
 
-
-  /*
-     GeoJSON môže byť Polygon
-     alebo MultiPolygon.
-  */
 
   if (
     slovakiaGeoJSON.geometry &&
     slovakiaGeoJSON.geometry.type === "Polygon"
   ) {
 
-    slovakiaCoordinates =
+    coordinates =
       slovakiaGeoJSON.geometry.coordinates;
 
   }
@@ -1157,60 +1028,32 @@ function updateSlovakiaMask() {
     slovakiaGeoJSON.geometry.type === "MultiPolygon"
   ) {
 
-    /*
-       Pre Slovensko je normálne Polygon,
-       ale ponecháme podporu aj pre MultiPolygon.
-    */
-
-    slovakiaCoordinates =
+    coordinates =
       slovakiaGeoJSON.geometry.coordinates[0];
 
   }
 
 
-  if (!slovakiaCoordinates) {
+  if (!coordinates) {
     return;
   }
 
 
-  const hole =
-    slovakiaCoordinates.map(
-      ring => {
-
-        return ring.map(
-          point => {
-
-            return [
-              point[1],
-              point[0]
-            ];
-
-          }
-        );
-
-      }
+  const slovakiaHole =
+    coordinates[0].map(
+      point => [
+        point[1],
+        point[0]
+      ]
     );
-
-
-  /*
-     Leaflet Polygon:
-
-     prvý ring = vonkajší svet
-     druhý ring = Slovensko ako otvor
-  */
-
-  const maskCoordinates = [
-
-    worldRing,
-
-    hole[0]
-
-  ];
 
 
   slovakiaMaskLayer =
     L.polygon(
-      maskCoordinates,
+      [
+        worldRing,
+        slovakiaHole
+      ],
       {
 
         stroke: false,
@@ -1218,6 +1061,8 @@ function updateSlovakiaMask() {
         fillColor: "white",
 
         fillOpacity: 1,
+
+        fillRule: "evenodd",
 
         interactive: false
 
@@ -1229,41 +1074,33 @@ function updateSlovakiaMask() {
 
 
   /*
-     Maska musí byť pod hranicou
-     a zároveň nad mapovými tiles.
+     Maska musí byť nad mapou,
+     ale pod hranicou a markermi.
   */
 
-  if (
-    slovakiaMaskLayer.getPane()
-  ) {
+  const maskPane =
+    slovakiaMaskLayer.getPane();
 
-    slovakiaMaskLayer
-      .getPane()
-      .style.zIndex = 700;
+  if (maskPane) {
+
+    maskPane.style.zIndex = 700;
 
   }
 
 
-  /*
-     Hranicu znova dáme nad masku.
-  */
+  const borderPane =
+    slovakiaBoundaryLayer.getPane();
 
-  if (slovakiaBoundaryLayer) {
+  if (borderPane) {
 
-    slovakiaBoundaryLayer.bringToFront();
-
-  }
-
-
-  /*
-     Markery musia byť nad všetkým.
-  */
-
-  if (markerLayer) {
-
-    markerLayer.bringToFront();
+    borderPane.style.zIndex = 850;
 
   }
+
+
+  slovakiaMaskLayer.bringToFront();
+
+  slovakiaBoundaryLayer.bringToFront();
 
 }
 
@@ -1599,122 +1436,350 @@ function createPopup(station) {
 
 
 /* ==========================================================
-   MARKER LAYER
+   MARKER LAYERS
 ========================================================== */
 
 const markerLayer =
   L.layerGroup().addTo(map);
 
+const clusterLayer =
+  L.layerGroup().addTo(map);
+
 
 /* ==========================================================
-   CREATE MARKERS
+   CREATE INDIVIDUAL MARKER
 ========================================================== */
 
-stations.forEach(
-  function(station) {
+function createStationMarker(station) {
 
-    const statusClass =
-      getStatusClass(
-        station.percent
-      );
+  const statusClass =
+    getStatusClass(
+      station.percent
+    );
 
 
-    const icon =
-      L.divIcon({
+  const icon =
+    L.divIcon({
 
-        className: "",
+      className: "",
 
-        html: `
+      html: `
 
-          <div class="charger-wrapper">
+        <div class="charger-wrapper">
 
-            <div
-              class="charger-body ${statusClass}"
-            >
+          <div
+            class="charger-body ${statusClass}"
+          >
 
-              <div class="charger-bolt">
-                ⚡
-              </div>
-
-            </div>
-
-            <div
-              class="station-label"
-              data-station="${station.name}"
-            >
-              ${station.city}
+            <div class="charger-bolt">
+              ⚡
             </div>
 
           </div>
 
-        `,
+          <div
+            class="station-label"
+            data-station="${station.name}"
+          >
+            ${station.city}
+          </div>
 
-        iconSize: [
-          42,
-          32
-        ],
+        </div>
 
-        iconAnchor: [
-          21,
-          16
-        ],
+      `,
 
-        popupAnchor: [
-          0,
-          -15
-        ]
+      iconSize: [
+        42,
+        32
+      ],
 
-      });
+      iconAnchor: [
+        21,
+        16
+      ],
 
+      popupAnchor: [
+        0,
+        -15
+      ]
 
-    const marker =
-      L.marker(
-        [
-          station.lat,
-          station.lng
-        ],
-        {
-
-          icon: icon,
-
-          riseOnHover: true,
-
-          zIndexOffset: 1000
-
-        }
-      );
+    });
 
 
-    marker.bindPopup(
-      createPopup(station),
+  const marker =
+    L.marker(
+      [
+        station.lat,
+        station.lng
+      ],
       {
 
-        maxWidth: 300,
+        icon: icon,
 
-        closeButton: true,
+        riseOnHover: true,
 
-        autoPan: true,
-
-        autoPanPaddingTopLeft:
-          [20, 100],
-
-        autoPanPaddingBottomRight:
-          [20, 100]
+        zIndexOffset: 1000
 
       }
     );
 
 
-    marker.stationData =
-      station;
+  marker.bindPopup(
+    createPopup(station),
+    {
+
+      maxWidth: 300,
+
+      closeButton: true,
+
+      autoPan: true,
+
+      autoPanPaddingTopLeft:
+        [20, 100],
+
+      autoPanPaddingBottomRight:
+        [20, 100]
+
+    }
+  );
 
 
-    marker.addTo(
-      markerLayer
+  marker.stationData =
+    station;
+
+
+  return marker;
+
+}
+
+
+/* ==========================================================
+   CREATE CLUSTER
+========================================================== */
+
+function createClusterMarker(
+  items,
+  latlng
+) {
+
+  const icon =
+    L.divIcon({
+
+      className: "",
+
+      html: `
+
+        <div class="station-cluster">
+          ${items.length}
+        </div>
+
+      `,
+
+      iconSize: [
+        46,
+        46
+      ],
+
+      iconAnchor: [
+        23,
+        23
+      ]
+
+    });
+
+
+  const marker =
+    L.marker(
+      latlng,
+      {
+
+        icon: icon,
+
+        zIndexOffset: 1200
+
+      }
     );
 
+
+  marker.on(
+    "click",
+    function() {
+
+      const bounds =
+        L.latLngBounds(
+          items.map(
+            station => [
+              station.lat,
+              station.lng
+            ]
+          )
+        );
+
+      map.fitBounds(
+        bounds,
+        {
+          padding: [
+            80,
+            80
+          ],
+          maxZoom: 10
+        }
+      );
+
+    }
+  );
+
+
+  return marker;
+
+}
+
+
+/* ==========================================================
+   GRID CLUSTERING
+========================================================== */
+
+function renderMarkers() {
+
+  markerLayer.clearLayers();
+
+  clusterLayer.clearLayers();
+
+
+  const zoom =
+    map.getZoom();
+
+
+  /*
+     Od zoom 7 vyššie:
+     normálne jednotlivé nabíjačky.
+  */
+
+  if (zoom >= 7) {
+
+    stations.forEach(
+      station => {
+
+        markerLayer.addLayer(
+          createStationMarker(
+            station
+          )
+        );
+
+      }
+    );
+
+    return;
+
   }
-);
+
+
+  /*
+     Pri oddialení zoskupujeme
+     stanice podľa pixelovej mriežky.
+  */
+
+  const gridSize =
+    zoom <= 3
+      ? 100
+      : zoom <= 4
+        ? 90
+        : zoom <= 5
+          ? 80
+          : 70;
+
+
+  const groups =
+    new Map();
+
+
+  stations.forEach(
+    station => {
+
+      const point =
+        map.project(
+          [
+            station.lat,
+            station.lng
+          ],
+          zoom
+        );
+
+
+      const key =
+        Math.floor(
+          point.x / gridSize
+        ) +
+        "_" +
+        Math.floor(
+          point.y / gridSize
+        );
+
+
+      if (!groups.has(key)) {
+
+        groups.set(
+          key,
+          []
+        );
+
+      }
+
+
+      groups
+        .get(key)
+        .push(station);
+
+    }
+  );
+
+
+  groups.forEach(
+    items => {
+
+      if (items.length === 1) {
+
+        clusterLayer.addLayer(
+          createStationMarker(
+            items[0]
+          )
+        );
+
+        return;
+
+      }
+
+
+      const lat =
+        items.reduce(
+          (sum, station) =>
+            sum + station.lat,
+          0
+        ) / items.length;
+
+
+      const lng =
+        items.reduce(
+          (sum, station) =>
+            sum + station.lng,
+          0
+        ) / items.length;
+
+
+      clusterLayer.addLayer(
+        createClusterMarker(
+          items,
+          [
+            lat,
+            lng
+          ]
+        )
+      );
+
+    }
+  );
+
+}
 
 
 /* ==========================================================
@@ -1727,55 +1792,53 @@ function updateMarkerSize() {
     map.getZoom();
 
 
-  const markers =
-    document.querySelectorAll(
-      ".charger-wrapper"
-    );
-
-
   let scale = 1;
 
 
-  if (zoom <= 4) {
+  if (zoom <= 3) {
 
-    scale = .45;
+    scale = .42;
+
+  }
+  else if (zoom <= 4) {
+
+    scale = .50;
 
   }
   else if (zoom <= 5) {
 
-    scale = .55;
+    scale = .60;
 
   }
   else if (zoom <= 6) {
 
-    scale = .65;
+    scale = .72;
 
   }
   else if (zoom <= 7) {
 
-    scale = .78;
+    scale = .84;
 
   }
   else if (zoom <= 8) {
 
-    scale = .88;
-
-  }
-  else {
-
-    scale = 1;
+    scale = .92;
 
   }
 
 
-  markers.forEach(
-    function(marker) {
+  document
+    .querySelectorAll(
+      ".charger-wrapper"
+    )
+    .forEach(
+      element => {
 
-      marker.style.transform =
-        `translate(-50%, -50%) scale(${scale})`;
+        element.style.transform =
+          `translate(-50%, -50%) scale(${scale})`;
 
-    }
-  );
+      }
+    );
 
 }
 
@@ -1796,33 +1859,29 @@ function updateLabels() {
     );
 
 
+  labels.forEach(
+    label => {
+
+      label.classList.remove(
+        "visible"
+      );
+
+      label.style.display =
+        "";
+
+    }
+  );
+
+
   /*
-     Veľmi veľký zoom-out:
-     iba nabíjačky.
+     Pri veľkom oddialení
+     žiadne názvy.
   */
 
-  if (zoom <= 6) {
-
-    labels.forEach(
-      label => {
-
-        label.classList.remove(
-          "visible"
-        );
-
-      }
-    );
-
+  if (zoom < 8) {
     return;
-
   }
 
-
-  /*
-     Stredný zoom:
-     ukážeme názvy, ale
-     collision systém ich preriedi.
-  */
 
   labels.forEach(
     label => {
@@ -1834,42 +1893,11 @@ function updateLabels() {
     }
   );
 
-
-  /*
-     Pri zoom 7-8 necháme
-     iba každý druhý názov,
-     aby mapa nebola zaprataná.
-  */
-
-  if (zoom <= 8) {
-
-    labels.forEach(
-      function(label, index) {
-
-        if (index % 2 !== 0) {
-
-          label.classList.remove(
-            "visible"
-          );
-
-        }
-
-      }
-    );
-
-  }
-
-
-  /*
-     Pri veľkom priblížení
-     zobrazíme všetky názvy.
-  */
-
 }
 
 
 /* ==========================================================
-   LABEL COLLISION DETECTION
+   LABEL COLLISION
 ========================================================== */
 
 function avoidLabelCollisions() {
@@ -1878,7 +1906,7 @@ function avoidLabelCollisions() {
     map.getZoom();
 
 
-  if (zoom <= 6) {
+  if (zoom < 8) {
     return;
   }
 
@@ -1891,9 +1919,8 @@ function avoidLabelCollisions() {
     );
 
 
-  /*
-     Najskôr všetky zobrazíme.
-  */
+  const visibleRects = [];
+
 
   labels.forEach(
     label => {
@@ -1905,21 +1932,15 @@ function avoidLabelCollisions() {
   );
 
 
-  const visibleRects = [];
-
-
-  /*
-     Kontrola prekrývania.
-  */
-
   labels.forEach(
-    function(label) {
+    label => {
 
       const rect =
         label.getBoundingClientRect();
 
 
-      let collision = false;
+      let collision =
+        false;
 
 
       for (
@@ -1929,10 +1950,14 @@ function avoidLabelCollisions() {
 
         const overlaps =
           !(
-            rect.right < existingRect.left ||
-            rect.left > existingRect.right ||
-            rect.bottom < existingRect.top ||
-            rect.top > existingRect.bottom
+            rect.right <
+              existingRect.left ||
+            rect.left >
+              existingRect.right ||
+            rect.bottom <
+              existingRect.top ||
+            rect.top >
+              existingRect.bottom
           );
 
 
@@ -1948,11 +1973,6 @@ function avoidLabelCollisions() {
 
 
       if (collision) {
-
-        /*
-           Pri nízkom zoome
-           radšej skryjeme názov.
-        */
 
         label.style.display =
           "none";
@@ -1973,21 +1993,17 @@ function avoidLabelCollisions() {
 
 
 /* ==========================================================
-   UPDATE EVERYTHING
+   UPDATE UI
 ========================================================== */
 
 function updateMapUI() {
+
+  renderMarkers();
 
   updateMarkerSize();
 
   updateLabels();
 
-  /*
-     Po zobrazení názvov
-     počkáme jeden frame,
-     aby browser vypočítal
-     ich skutočné pozície.
-  */
 
   requestAnimationFrame(
     function() {
@@ -1999,8 +2015,12 @@ function updateMapUI() {
 
 
   /*
-     Maska musí zostať nad mapou,
-     ale pod markermi.
+     Správne poradie vrstiev:
+     mapa
+     → names overlay
+     → biela maska
+     → hranica
+     → markery
   */
 
   if (slovakiaMaskLayer) {
@@ -2016,6 +2036,8 @@ function updateMapUI() {
 
   }
 
+
+  clusterLayer.bringToFront();
 
   markerLayer.bringToFront();
 
