@@ -139,54 +139,64 @@ const regionsPane = map.createPane("regionsPane");
 regionsPane.style.zIndex=450;
 regionsPane.style.pointerEvents="none";
 
-let outsideSvg=null, outsidePath=null;
 let slovakiaFeature=null;
+let outsideMask=null;
 let regionLayer=null;
 let countryLayer=null;
 
-function coordsToPath(coords){
-  let d="";
-  if(!Array.isArray(coords)) return d;
-  for(const ring of coords){
-    if(!ring || ring.length<2) continue;
-    ring.forEach((p,i)=>{
-      const q=map.latLngToLayerPoint([p[1],p[0]]);
-      d += (i===0 ? "M " : "L ") + q.x + " " + q.y + " ";
+/*
+  DÔLEŽITÉ:
+  Mapa mimo Slovensko sa NESMIE iba stmaviť.
+  Preto používame skutočný Leaflet polygon s otvorom v tvare Slovenska.
+  Celý svet je prekrytý sivou plochou a otvor zostáva iba Slovensko.
+*/
+function geometryToLeafletRings(geometry){
+  if(!geometry) return [];
+  if(geometry.type === "Polygon") {
+    return geometry.coordinates.map(ring =>
+      ring.map(p => [p[1], p[0]])
+    );
+  }
+  if(geometry.type === "MultiPolygon") {
+    const rings=[];
+    geometry.coordinates.forEach(poly => {
+      poly.forEach((ring,index) => {
+        // Outer rings of a multipolygon are holes in the world mask.
+        if(index===0) rings.push(ring.map(p => [p[1],p[0]]));
+      });
     });
-    d+="Z ";
+    return rings;
   }
-  return d;
+  return [];
 }
 
-function geometryToPath(g){
-  if(!g) return "";
-  if(g.type==="Polygon") return coordsToPath(g.coordinates);
-  if(g.type==="MultiPolygon"){
-    return g.coordinates.map(poly=>coordsToPath(poly)).join("");
+function buildOutsideMask(){
+  if(outsideMask){
+    outsideMask.remove();
+    outsideMask=null;
   }
-  return "";
-}
+  if(!slovakiaFeature) return;
 
-function buildOutsideOverlay(){
-  outsidePane.innerHTML="";
-  outsideSvg=document.createElementNS("http://www.w3.org/2000/svg","svg");
-  outsideSvg.setAttribute("class","outside-svg");
-  outsideSvg.setAttribute("width","100%");
-  outsideSvg.setAttribute("height","100%");
-  outsidePath=document.createElementNS("http://www.w3.org/2000/svg","path");
-  outsidePath.setAttribute("class","outside-fill");
-  outsidePath.setAttribute("fill-rule","evenodd");
-  outsideSvg.appendChild(outsidePath);
-  outsidePane.appendChild(outsideSvg);
-  updateOutsideOverlay();
-}
+  const world=[
+    [-89.9,-179.9],
+    [-89.9,179.9],
+    [89.9,179.9],
+    [89.9,-179.9]
+  ];
 
-function updateOutsideOverlay(){
-  if(!outsideSvg || !outsidePath || !slovakiaFeature) return;
-  const size=map.getSize();
-  outsideSvg.setAttribute("viewBox",`0 0 ${size.x} ${size.y}`);
-  const outer=`M 0 0 L ${size.x} 0 L ${size.x} ${size.y} L 0 ${size.y} Z `;
-  outsidePath.setAttribute("d",outer+geometryToPath(slovakiaFeature.geometry));
+  const rings=geometryToLeafletRings(slovakiaFeature.geometry);
+  if(!rings.length) return;
+
+  outsideMask=L.polygon(
+    [world,...rings],
+    {
+      pane:"outsidePane",
+      stroke:false,
+      fillColor:"#dfe4e1",
+      fillOpacity:1,
+      interactive:false
+    }
+  ).addTo(map);
 }
 
 function statusClass(p){
@@ -295,7 +305,7 @@ Promise.all([fetch(NUTS_URL).then(r=>r.json()),fetch(COUNTRY_URL).then(r=>r.json
   regionLayer=L.geoJSON(skRegions,{pane:"regionsPane",style:styleRegions,interactive:false}).addTo(map);
   countryLayer=L.geoJSON(slovakiaFeature,{pane:"regionsPane",style:{fill:false,color:"#173d31",weight:3,opacity:1},interactive:false}).addTo(map);
 
-  buildOutsideOverlay();
+  buildOutsideMask();
   document.getElementById("loading").style.display="none";
   map.fitBounds(L.geoJSON(slovakiaFeature).getBounds(),{padding:[15,15]});
   map.setZoom(Math.max(map.getZoom(),7.35));
@@ -304,10 +314,6 @@ Promise.all([fetch(NUTS_URL).then(r=>r.json()),fetch(COUNTRY_URL).then(r=>r.json
   console.error(err);
   document.getElementById("loading").style.display="none";
   document.getElementById("error").style.display="block";
-});
-
-map.on("move zoom resize",()=>{
-  updateOutsideOverlay();
 });
 
 map.on("zoomstart",()=>{
@@ -321,7 +327,6 @@ map.on("popupopen",()=>{
 
 window.addEventListener("resize",()=>{
   map.invalidateSize();
-  updateOutsideOverlay();
 });
 </script>
 </body>
