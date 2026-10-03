@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>ebike-soltech</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<style>
+*{box-sizing:border-box}
+html,body,#app{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,Helvetica,sans-serif}
+#app{display:flex;flex-direction:column;background:#fff}
+.header{height:112px;min-height:112px;background:#fff;padding:13px 22px;display:flex;flex-direction:column;justify-content:center;z-index:3000}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-bolt{font-size:38px;color:#ffb900;line-height:1}
+.logo-text{font-size:32px;font-weight:800;color:#153d31;letter-spacing:-1.4px}
+.subtitle{margin-left:3px;margin-top:4px;color:#718078;font-size:15px;font-weight:600}
+#map{position:relative;flex:1;min-height:0;background:#dfe4e1}
+.leaflet-container{background:#dfe4e1;font-family:Arial,Helvetica,sans-serif}
+.leaflet-control-zoom{border:0!important;box-shadow:0 4px 14px rgba(0,0,0,.18)!important}
+.leaflet-control-zoom a{width:46px!important;height:46px!important;line-height:46px!important;font-size:27px!important;color:#111!important;background:#fff!important;border:0!important}
+.leaflet-control-zoom a:first-child{border-radius:8px 8px 0 0}
+.leaflet-control-zoom a:last-child{border-radius:0 0 8px 8px}
+.slovakia-dimmer-pane{z-index:350;pointer-events:none}
+.slovakia-dimmer-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.slovakia-dimmer-rect{fill:rgba(28,36,33,.72)}
+.regions-pane{z-index:450;pointer-events:none}
+.region-other{fill:#858e8a;fill-opacity:.68;stroke:#69736e;stroke-width:1.5}
+.region-trencin{fill:#19a968;fill-opacity:.12;stroke:#173d31;stroke-width:3}
+.slovakia-border{fill:none;stroke:#173d31;stroke-width:2.8;opacity:.95}
+.station-icon{width:28px;height:28px;border-radius:8px;border:3px solid #fff;box-shadow:0 3px 9px rgba(0,0,0,.30);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:900;line-height:1}
+.station-icon.status-red{background:#ef3b38}
+.station-icon.status-orange{background:#f49a13}
+.station-icon.status-yellow{background:#f2c400}
+.station-icon.status-green{background:#18a968}
+.station-icon.planned{border-radius:50%;width:26px;height:26px}
+.station-popup{width:310px;overflow:hidden;border-radius:18px;background:#fff}
+.popup-map{display:block;width:100%;height:150px;object-fit:cover;background:#e7ece9}
+.popup-content{padding:14px 15px 15px}
+.popup-title{font-size:19px;font-weight:800;color:#173d31;margin-bottom:3px}
+.popup-location{font-size:12px;color:#7a8781;margin-bottom:12px}
+.planned-badge{display:inline-block;background:#eef7f2;color:#18764e;border-radius:999px;padding:5px 8px;font-size:10px;font-weight:800;margin-bottom:10px}
+.energy-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px}
+.energy-label{font-size:12px;color:#64736c}.energy-value{font-size:13px;font-weight:800;color:#173d31}
+.progress{height:8px;background:#e9eeeb;border-radius:10px;overflow:hidden;margin-bottom:12px}
+.progress-inner{height:100%;border-radius:10px}
+.popup-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.info-box{background:#f4f7f5;border-radius:9px;padding:8px}
+.info-label{font-size:10px;color:#7a8781}.info-value{font-size:13px;font-weight:800;color:#173d31;margin-top:2px}
+.nav-button{display:flex;align-items:center;justify-content:center;width:100%;text-decoration:none;background:#173d31;color:#fff;padding:11px;border-radius:10px;font-size:13px;font-weight:800}
+.location-button{display:flex;align-items:center;justify-content:center;width:100%;text-decoration:none;background:#eaf0ed;color:#173d31;padding:9px;border-radius:10px;font-size:12px;font-weight:800;margin-top:7px}
+.legend{position:absolute;right:10px;bottom:12px;background:rgba(255,255,255,.96);border-radius:13px;padding:9px 11px;box-shadow:0 5px 18px rgba(0,0,0,.16);z-index:2000;min-width:155px}
+.legend-title{color:#173d31;font-size:14px;font-weight:800;margin-bottom:7px}
+.legend-row{display:flex;align-items:center;margin:5px 0;color:#3f5149;font-size:11px}
+.legend-dot{width:10px;height:10px;border-radius:50%;margin-right:7px}.legend-red{background:#ef3b38}.legend-orange{background:#f49a13}.legend-yellow{background:#f2c400}.legend-green{background:#18a968}
+.loading{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:#fff;padding:14px 18px;border-radius:12px;box-shadow:0 8px 28px rgba(0,0,0,.15);z-index:5000;color:#173d31;font-weight:700;font-size:13px}
+.error{display:none;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(90%,420px);background:#fff;padding:22px;border-radius:16px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,.16);z-index:5000;color:#173d31}
+@media(max-width:600px){
+.header{height:106px;min-height:106px;padding:11px 18px}.logo-bolt{font-size:33px}.logo-text{font-size:27px}.subtitle{font-size:13px}
+.legend{right:8px;bottom:9px;min-width:145px;padding:8px 9px}.legend-title{font-size:12px}.legend-row{font-size:10px;margin:4px 0}.legend-dot{width:9px;height:9px}
+.station-popup{width:285px}.popup-map{height:135px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+<header class="header">
+  <div class="logo"><div class="logo-bolt">ϟ</div><div class="logo-text">ebike-soltech</div></div>
+  <div class="subtitle">Interaktívna sieť nabíjacích staníc • Trenčiansky kraj</div>
+</header>
+<div id="map">
+  <div class="legend">
+    <div class="legend-title">Stav stanice</div>
+    <div class="legend-row"><span class="legend-dot legend-red"></span>0–20 % – kritická</div>
+    <div class="legend-row"><span class="legend-dot legend-orange"></span>21–40 % – nízka</div>
+    <div class="legend-row"><span class="legend-dot legend-yellow"></span>41–60 % – stredná</div>
+    <div class="legend-row"><span class="legend-dot legend-green"></span>61–100 % – dobrá</div>
+  </div>
+  <div id="loading" class="loading">Načítavam mapu…</div>
+  <div id="error" class="error"><b>Nepodarilo sa načítať hranice krajov.</b><br><br>Mapa a stanice fungujú, ale zvýraznenie krajov sa nepodarilo načítať.</div>
+</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const MAPY_API_KEY = "Ld1wDiRmzkSKYG09mz9BiWl-ti-D2b_eEGv4i9eoBe0";
+
+const SLOVAKIA_CENTER = [48.72, 19.48];
+const SLOVAKIA_MAX_BOUNDS = [[47.68,16.78],[49.65,22.62]];
+const REGIONS_URL = "https://gisco-services.ec.europa.eu/distribution/v2/nuts/geojson/NUTS_RG_03M_2024_4326_LEVL_3.geojson";
+
+const stations = [{"id":1,"name":"E-BIKE POINT Trenčín","city":"Trenčín","lat":48.8945,"lng":18.0444,"percent":78,"solar":2.0,"battery":8,"ports":6,"planned":true},{"id":2,"name":"E-BIKE POINT Trenčín 2","city":"Trenčín","lat":48.9045,"lng":18.0584,"percent":64,"solar":2.2,"battery":10,"ports":6,"planned":true},{"id":3,"name":"E-BIKE POINT Trenčín 3","city":"Trenčín","lat":48.8855,"lng":18.0564,"percent":54,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":4,"name":"E-BIKE POINT Trenčín 4","city":"Trenčín","lat":48.9025,"lng":18.0314,"percent":37,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":5,"name":"E-BIKE POINT Trenčín 5","city":"Trenčín","lat":48.8825,"lng":18.0344,"percent":82,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":6,"name":"E-BIKE POINT Trenčín 6","city":"Trenčín","lat":48.9095,"lng":18.0404,"percent":68,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":7,"name":"E-BIKE POINT Dubnica nad Váhom","city":"Dubnica nad Váhom","lat":48.9597,"lng":18.1663,"percent":43,"solar":2.2,"battery":10,"ports":6,"planned":true},{"id":8,"name":"E-BIKE POINT Dubnica nad Váhom 2","city":"Dubnica nad Váhom","lat":48.9697,"lng":18.1803,"percent":72,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":9,"name":"E-BIKE POINT Dubnica nad Váhom 3","city":"Dubnica nad Váhom","lat":48.9507,"lng":18.1783,"percent":91,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":10,"name":"E-BIKE POINT Dubnica nad Váhom 4","city":"Dubnica nad Váhom","lat":48.9677,"lng":18.1533,"percent":19,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":11,"name":"E-BIKE POINT Dubnica nad Váhom 5","city":"Dubnica nad Váhom","lat":48.9477,"lng":18.1563,"percent":58,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":12,"name":"E-BIKE POINT Dubnica nad Váhom 6","city":"Dubnica nad Váhom","lat":48.9747,"lng":18.1623,"percent":74,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":13,"name":"E-BIKE POINT Ilava","city":"Ilava","lat":49.0,"lng":18.235,"percent":34,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":14,"name":"E-BIKE POINT Ilava 2","city":"Ilava","lat":49.01,"lng":18.249,"percent":63,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":15,"name":"E-BIKE POINT Ilava 3","city":"Ilava","lat":48.991,"lng":18.247,"percent":78,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":16,"name":"E-BIKE POINT Ilava 4","city":"Ilava","lat":49.008,"lng":18.222,"percent":64,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":17,"name":"E-BIKE POINT Ilava 5","city":"Ilava","lat":48.988,"lng":18.225,"percent":54,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":18,"name":"E-BIKE POINT Ilava 6","city":"Ilava","lat":49.015,"lng":18.231,"percent":37,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":19,"name":"E-BIKE POINT Púchov","city":"Púchov","lat":49.124,"lng":18.3258,"percent":82,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":20,"name":"E-BIKE POINT Púchov 2","city":"Púchov","lat":49.134,"lng":18.3398,"percent":68,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":21,"name":"E-BIKE POINT Púchov 3","city":"Púchov","lat":49.115,"lng":18.3378,"percent":43,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":22,"name":"E-BIKE POINT Púchov 4","city":"Púchov","lat":49.132,"lng":18.3128,"percent":72,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":23,"name":"E-BIKE POINT Púchov 5","city":"Púchov","lat":49.112,"lng":18.3158,"percent":91,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":24,"name":"E-BIKE POINT Púchov 6","city":"Púchov","lat":49.139,"lng":18.3218,"percent":19,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":25,"name":"E-BIKE POINT Považská Bystrica","city":"Považská Bystrica","lat":49.115,"lng":18.448,"percent":58,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":26,"name":"E-BIKE POINT Považská Bystrica 2","city":"Považská Bystrica","lat":49.125,"lng":18.462,"percent":74,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":27,"name":"E-BIKE POINT Považská Bystrica 3","city":"Považská Bystrica","lat":49.106,"lng":18.46,"percent":34,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":28,"name":"E-BIKE POINT Považská Bystrica 4","city":"Považská Bystrica","lat":49.123,"lng":18.435,"percent":63,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":29,"name":"E-BIKE POINT Považská Bystrica 5","city":"Považská Bystrica","lat":49.103,"lng":18.438,"percent":78,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":30,"name":"E-BIKE POINT Považská Bystrica 6","city":"Považská Bystrica","lat":49.13,"lng":18.444,"percent":64,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":31,"name":"E-BIKE POINT Bytča","city":"Bytča","lat":49.224,"lng":18.558,"percent":54,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":32,"name":"E-BIKE POINT Bytča 2","city":"Bytča","lat":49.234,"lng":18.572,"percent":37,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":33,"name":"E-BIKE POINT Bytča 3","city":"Bytča","lat":49.215,"lng":18.57,"percent":82,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":34,"name":"E-BIKE POINT Bytča 4","city":"Bytča","lat":49.232,"lng":18.545,"percent":68,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":35,"name":"E-BIKE POINT Bytča 5","city":"Bytča","lat":49.212,"lng":18.548,"percent":43,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":36,"name":"E-BIKE POINT Bytča 6","city":"Bytča","lat":49.239,"lng":18.554,"percent":72,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":37,"name":"E-BIKE POINT Bojnice","city":"Bojnice","lat":48.778,"lng":18.585,"percent":91,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":38,"name":"E-BIKE POINT Bojnice 2","city":"Bojnice","lat":48.788,"lng":18.599,"percent":19,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":39,"name":"E-BIKE POINT Bojnice 3","city":"Bojnice","lat":48.769,"lng":18.597,"percent":58,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":40,"name":"E-BIKE POINT Bojnice 4","city":"Bojnice","lat":48.786,"lng":18.572,"percent":74,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":41,"name":"E-BIKE POINT Bojnice 5","city":"Bojnice","lat":48.766,"lng":18.575,"percent":34,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":42,"name":"E-BIKE POINT Bojnice 6","city":"Bojnice","lat":48.793,"lng":18.581,"percent":63,"solar":2.5,"battery":12,"ports":6,"planned":true},{"id":43,"name":"E-BIKE POINT Prievidza","city":"Prievidza","lat":48.774,"lng":18.627,"percent":78,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":44,"name":"E-BIKE POINT Prievidza 2","city":"Prievidza","lat":48.784,"lng":18.641,"percent":64,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":45,"name":"E-BIKE POINT Prievidza 3","city":"Prievidza","lat":48.765,"lng":18.639,"percent":54,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":46,"name":"E-BIKE POINT Prievidza 4","city":"Prievidza","lat":48.782,"lng":18.614,"percent":37,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":47,"name":"E-BIKE POINT Prievidza 5","city":"Prievidza","lat":48.762,"lng":18.617,"percent":82,"solar":2.5,"battery":12,"ports":6,"planned":true},{"id":48,"name":"E-BIKE POINT Prievidza 6","city":"Prievidza","lat":48.789,"lng":18.623,"percent":68,"solar":2.0,"battery":8,"ports":6,"planned":true},{"id":49,"name":"E-BIKE POINT Handlová","city":"Handlová","lat":48.727,"lng":18.76,"percent":43,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":50,"name":"E-BIKE POINT Handlová 2","city":"Handlová","lat":48.737,"lng":18.774,"percent":72,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":51,"name":"E-BIKE POINT Handlová 3","city":"Handlová","lat":48.718,"lng":18.772,"percent":91,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":52,"name":"E-BIKE POINT Handlová 4","city":"Handlová","lat":48.735,"lng":18.747,"percent":19,"solar":2.5,"battery":12,"ports":6,"planned":true},{"id":53,"name":"E-BIKE POINT Handlová 5","city":"Handlová","lat":48.715,"lng":18.75,"percent":58,"solar":2.0,"battery":8,"ports":6,"planned":true},{"id":54,"name":"E-BIKE POINT Handlová 6","city":"Handlová","lat":48.742,"lng":18.756,"percent":74,"solar":2.2,"battery":10,"ports":6,"planned":true},{"id":55,"name":"E-BIKE POINT Partizánske","city":"Partizánske","lat":48.628,"lng":18.384,"percent":34,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":56,"name":"E-BIKE POINT Partizánske 2","city":"Partizánske","lat":48.638,"lng":18.398,"percent":63,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":57,"name":"E-BIKE POINT Partizánske 3","city":"Partizánske","lat":48.619,"lng":18.396,"percent":78,"solar":2.5,"battery":12,"ports":6,"planned":true},{"id":58,"name":"E-BIKE POINT Partizánske 4","city":"Partizánske","lat":48.636,"lng":18.371,"percent":64,"solar":2.0,"battery":8,"ports":6,"planned":true},{"id":59,"name":"E-BIKE POINT Partizánske 5","city":"Partizánske","lat":48.616,"lng":18.374,"percent":54,"solar":2.2,"battery":10,"ports":6,"planned":true},{"id":60,"name":"E-BIKE POINT Partizánske 6","city":"Partizánske","lat":48.643,"lng":18.38,"percent":37,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":61,"name":"E-BIKE POINT Bánovce nad Bebravou","city":"Bánovce nad Bebravou","lat":48.721,"lng":18.258,"percent":82,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":62,"name":"E-BIKE POINT Bánovce nad Bebravou 2","city":"Bánovce nad Bebravou","lat":48.731,"lng":18.272,"percent":68,"solar":2.5,"battery":12,"ports":6,"planned":true},{"id":63,"name":"E-BIKE POINT Bánovce nad Bebravou 3","city":"Bánovce nad Bebravou","lat":48.712,"lng":18.27,"percent":43,"solar":2.0,"battery":8,"ports":6,"planned":true},{"id":64,"name":"E-BIKE POINT Bánovce nad Bebravou 4","city":"Bánovce nad Bebravou","lat":48.729,"lng":18.245,"percent":72,"solar":2.2,"battery":10,"ports":6,"planned":true},{"id":65,"name":"E-BIKE POINT Bánovce nad Bebravou 5","city":"Bánovce nad Bebravou","lat":48.709,"lng":18.248,"percent":91,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":66,"name":"E-BIKE POINT Bánovce nad Bebravou 6","city":"Bánovce nad Bebravou","lat":48.736,"lng":18.254,"percent":19,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":67,"name":"E-BIKE POINT Nové Mesto nad Váhom","city":"Nové Mesto nad Váhom","lat":48.757,"lng":17.83,"percent":58,"solar":2.5,"battery":12,"ports":6,"planned":true},{"id":68,"name":"E-BIKE POINT Nové Mesto nad Váhom 2","city":"Nové Mesto nad Váhom","lat":48.767,"lng":17.844,"percent":74,"solar":2.0,"battery":8,"ports":6,"planned":true},{"id":69,"name":"E-BIKE POINT Nové Mesto nad Váhom 3","city":"Nové Mesto nad Váhom","lat":48.748,"lng":17.842,"percent":34,"solar":2.2,"battery":10,"ports":6,"planned":true},{"id":70,"name":"E-BIKE POINT Nové Mesto nad Váhom 4","city":"Nové Mesto nad Váhom","lat":48.765,"lng":17.817,"percent":63,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":71,"name":"E-BIKE POINT Nové Mesto nad Váhom 5","city":"Nové Mesto nad Váhom","lat":48.745,"lng":17.82,"percent":78,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":72,"name":"E-BIKE POINT Nové Mesto nad Váhom 6","city":"Nové Mesto nad Váhom","lat":48.772,"lng":17.826,"percent":64,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":73,"name":"E-BIKE POINT Beckov","city":"Beckov","lat":48.789,"lng":17.896,"percent":54,"solar":2.0,"battery":8,"ports":6,"planned":true},{"id":74,"name":"E-BIKE POINT Beckov 2","city":"Beckov","lat":48.799,"lng":17.91,"percent":37,"solar":2.2,"battery":10,"ports":6,"planned":true},{"id":75,"name":"E-BIKE POINT Beckov 3","city":"Beckov","lat":48.78,"lng":17.908,"percent":82,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":76,"name":"E-BIKE POINT Beckov 4","city":"Beckov","lat":48.797,"lng":17.883,"percent":68,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":77,"name":"E-BIKE POINT Beckov 5","city":"Beckov","lat":48.777,"lng":17.886,"percent":43,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":78,"name":"E-BIKE POINT Beckov 6","city":"Beckov","lat":48.804,"lng":17.892,"percent":72,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":79,"name":"E-BIKE POINT Trenčianske Teplice","city":"Trenčianske Teplice","lat":48.91,"lng":18.168,"percent":91,"solar":2.2,"battery":10,"ports":6,"planned":true},{"id":80,"name":"E-BIKE POINT Trenčianske Teplice 2","city":"Trenčianske Teplice","lat":48.92,"lng":18.182,"percent":19,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":81,"name":"E-BIKE POINT Trenčianske Teplice 3","city":"Trenčianske Teplice","lat":48.901,"lng":18.18,"percent":58,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":82,"name":"E-BIKE POINT Trenčianske Teplice 4","city":"Trenčianske Teplice","lat":48.918,"lng":18.155,"percent":74,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":83,"name":"E-BIKE POINT Trenčianske Teplice 5","city":"Trenčianske Teplice","lat":48.898,"lng":18.158,"percent":34,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":84,"name":"E-BIKE POINT Trenčianske Teplice 6","city":"Trenčianske Teplice","lat":48.925,"lng":18.164,"percent":63,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":85,"name":"E-BIKE POINT Nemšová","city":"Nemšová","lat":48.967,"lng":18.118,"percent":78,"solar":2.4,"battery":12,"ports":6,"planned":true},{"id":86,"name":"E-BIKE POINT Nemšová 2","city":"Nemšová","lat":48.977,"lng":18.132,"percent":64,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":87,"name":"E-BIKE POINT Nemšová 3","city":"Nemšová","lat":48.958,"lng":18.13,"percent":54,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":88,"name":"E-BIKE POINT Nemšová 4","city":"Nemšová","lat":48.975,"lng":18.105,"percent":37,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":89,"name":"E-BIKE POINT Nemšová 5","city":"Nemšová","lat":48.955,"lng":18.108,"percent":82,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":90,"name":"E-BIKE POINT Nemšová 6","city":"Nemšová","lat":48.982,"lng":18.114,"percent":68,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":91,"name":"E-BIKE POINT Stará Turá","city":"Stará Turá","lat":48.777,"lng":17.694,"percent":43,"solar":2.5,"battery":8,"ports":6,"planned":true},{"id":92,"name":"E-BIKE POINT Stará Turá 2","city":"Stará Turá","lat":48.787,"lng":17.708,"percent":72,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":93,"name":"E-BIKE POINT Stará Turá 3","city":"Stará Turá","lat":48.768,"lng":17.706,"percent":91,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":94,"name":"E-BIKE POINT Stará Turá 4","city":"Stará Turá","lat":48.785,"lng":17.681,"percent":19,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":95,"name":"E-BIKE POINT Stará Turá 5","city":"Stará Turá","lat":48.765,"lng":17.684,"percent":58,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":96,"name":"E-BIKE POINT Stará Turá 6","city":"Stará Turá","lat":48.792,"lng":17.69,"percent":74,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":97,"name":"E-BIKE POINT Myjava","city":"Myjava","lat":48.758,"lng":17.568,"percent":34,"solar":2.0,"battery":10,"ports":6,"planned":true},{"id":98,"name":"E-BIKE POINT Myjava 2","city":"Myjava","lat":48.768,"lng":17.582,"percent":63,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":99,"name":"E-BIKE POINT Myjava 3","city":"Myjava","lat":48.749,"lng":17.58,"percent":78,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":100,"name":"E-BIKE POINT Myjava 4","city":"Myjava","lat":48.766,"lng":17.555,"percent":64,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":101,"name":"E-BIKE POINT Myjava 5","city":"Myjava","lat":48.746,"lng":17.558,"percent":54,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":102,"name":"E-BIKE POINT Myjava 6","city":"Myjava","lat":48.773,"lng":17.564,"percent":37,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":103,"name":"E-BIKE POINT Skalka nad Váhom","city":"Skalka nad Váhom","lat":48.887,"lng":18.02,"percent":82,"solar":2.2,"battery":12,"ports":6,"planned":true},{"id":104,"name":"E-BIKE POINT Skalka nad Váhom 2","city":"Skalka nad Váhom","lat":48.897,"lng":18.034,"percent":68,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":105,"name":"E-BIKE POINT Skalka nad Váhom 3","city":"Skalka nad Váhom","lat":48.878,"lng":18.032,"percent":43,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":106,"name":"E-BIKE POINT Skalka nad Váhom 4","city":"Skalka nad Váhom","lat":48.895,"lng":18.007,"percent":72,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":107,"name":"E-BIKE POINT Skalka nad Váhom 5","city":"Skalka nad Váhom","lat":48.875,"lng":18.01,"percent":91,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":108,"name":"E-BIKE POINT Skalka nad Váhom 6","city":"Skalka nad Váhom","lat":48.902,"lng":18.016,"percent":19,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":109,"name":"E-BIKE POINT Čachtice","city":"Čachtice","lat":48.713,"lng":17.786,"percent":58,"solar":2.4,"battery":8,"ports":6,"planned":true},{"id":110,"name":"E-BIKE POINT Čachtice 2","city":"Čachtice","lat":48.723,"lng":17.8,"percent":74,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":111,"name":"E-BIKE POINT Čachtice 3","city":"Čachtice","lat":48.704,"lng":17.798,"percent":34,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":112,"name":"E-BIKE POINT Čachtice 4","city":"Čachtice","lat":48.721,"lng":17.773,"percent":63,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":113,"name":"E-BIKE POINT Čachtice 5","city":"Čachtice","lat":48.701,"lng":17.776,"percent":78,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":114,"name":"E-BIKE POINT Čachtice 6","city":"Čachtice","lat":48.728,"lng":17.782,"percent":64,"solar":2.5,"battery":12,"ports":6,"planned":true},{"id":115,"name":"E-BIKE POINT Lednica","city":"Lednica","lat":49.153,"lng":18.287,"percent":54,"solar":2.5,"battery":10,"ports":6,"planned":true},{"id":116,"name":"E-BIKE POINT Lednica 2","city":"Lednica","lat":49.163,"lng":18.301,"percent":37,"solar":2.0,"battery":12,"ports":6,"planned":true},{"id":117,"name":"E-BIKE POINT Lednica 3","city":"Lednica","lat":49.144,"lng":18.299,"percent":82,"solar":2.2,"battery":8,"ports":6,"planned":true},{"id":118,"name":"E-BIKE POINT Lednica 4","city":"Lednica","lat":49.161,"lng":18.274,"percent":68,"solar":2.4,"battery":10,"ports":6,"planned":true},{"id":119,"name":"E-BIKE POINT Lednica 5","city":"Lednica","lat":49.141,"lng":18.277,"percent":43,"solar":2.5,"battery":12,"ports":6,"planned":true},{"id":120,"name":"E-BIKE POINT Lednica 6","city":"Lednica","lat":49.168,"lng":18.283,"percent":72,"solar":2.0,"battery":8,"ports":6,"planned":true}];
+
+const map = L.map("map", {
+  center:SLOVAKIA_CENTER,
+  zoom:7.65,
+  minZoom:7.15,
+  maxZoom:19,
+  maxBounds:SLOVAKIA_MAX_BOUNDS,
+  maxBoundsViscosity:1,
+  worldCopyJump:false,
+  zoomControl:true,
+  preferCanvas:true,
+  attributionControl:true
+});
+
+const tiles = L.tileLayer(
+  "https://api.mapy.com/v1/maptiles/outdoor/256/{z}/{x}/{y}?apikey="+encodeURIComponent(MAPY_API_KEY)+"&lang=sk",
+  {
+    minZoom:0,maxZoom:19,tileSize:256,noWrap:true,
+    updateWhenIdle:true,keepBuffer:2,
+    attribution:'<a href="https://mapy.com/" target="_blank">Mapy.com</a> © Seznam.cz a ďalší'
+  }
+).addTo(map);
+
+map.createPane("slovakiaDimmerPane");
+map.getPane("slovakiaDimmerPane").style.zIndex=350;
+map.getPane("slovakiaDimmerPane").style.pointerEvents="none";
+
+map.createPane("regionsPane");
+map.getPane("regionsPane").style.zIndex=450;
+map.getPane("regionsPane").style.pointerEvents="none";
+
+map.createPane("stationsPane");
+map.getPane("stationsPane").style.zIndex=600;
+
+let regionsData = null;
+let dimmerSvg = null;
+let dimmerMaskPath = null;
+let regionsLayer = null;
+let borderLayer = null;
+
+function makePath(geometry){
+  if(!geometry) return "";
+  let d="";
+  const ringPath = ring => {
+    if(!ring || ring.length<2) return "";
+    return ring.map((p,i)=>{
+      const pt=map.latLngToContainerPoint([p[1],p[0]]);
+      return (i===0?"M ":"L ")+pt.x+" "+pt.y+" ";
+    }).join("")+"Z ";
+  };
+  if(geometry.type==="Polygon"){
+    geometry.coordinates.forEach(r=>d+=ringPath(r));
+  } else if(geometry.type==="MultiPolygon"){
+    geometry.coordinates.forEach(poly=>poly.forEach(r=>d+=ringPath(r)));
+  }
+  return d;
+}
+
+function updateDimmer(){
+  if(!dimmerSvg || !dimmerMaskPath || !regionsData) return;
+  let d="";
+  regionsData.features.forEach(f=>d+=makePath(f.geometry));
+  dimmerMaskPath.setAttribute("d",d);
+  const s=map.getSize();
+  dimmerSvg.setAttribute("viewBox",`0 0 ${s.x} ${s.y}`);
+}
+
+function createDimmer(){
+  const pane=map.getPane("slovakiaDimmerPane");
+  pane.innerHTML="";
+  dimmerSvg=document.createElementNS("http://www.w3.org/2000/svg","svg");
+  dimmerSvg.setAttribute("class","slovakia-dimmer-svg");
+  dimmerSvg.setAttribute("viewBox",`0 0 ${map.getSize().x} ${map.getSize().y}`);
+  const defs=document.createElementNS("http://www.w3.org/2000/svg","defs");
+  const mask=document.createElementNS("http://www.w3.org/2000/svg","mask");
+  mask.setAttribute("id","skMask");
+  mask.setAttribute("maskUnits","userSpaceOnUse");
+  const outer=document.createElementNS("http://www.w3.org/2000/svg","rect");
+  outer.setAttribute("x","0");outer.setAttribute("y","0");outer.setAttribute("width","100%");outer.setAttribute("height","100%");outer.setAttribute("fill","white");
+  dimmerMaskPath=document.createElementNS("http://www.w3.org/2000/svg","path");
+  dimmerMaskPath.setAttribute("fill","black");
+  dimmerMaskPath.setAttribute("fill-rule","evenodd");
+  mask.appendChild(outer);mask.appendChild(dimmerMaskPath);defs.appendChild(mask);dimmerSvg.appendChild(defs);
+  const rect=document.createElementNS("http://www.w3.org/2000/svg","rect");
+  rect.setAttribute("class","slovakia-dimmer-rect");rect.setAttribute("x","0");rect.setAttribute("y","0");rect.setAttribute("width","100%");rect.setAttribute("height","100%");rect.setAttribute("mask","url(#skMask)");
+  dimmerSvg.appendChild(rect);pane.appendChild(dimmerSvg);
+}
+
+function statusClass(p){
+  if(p<=20) return "status-red";
+  if(p<=40) return "status-orange";
+  if(p<=60) return "status-yellow";
+  return "status-green";
+}
+
+function mapImage(station){
+  return "https://api.mapy.com/v1/static/map?lon="+encodeURIComponent(station.lng)+
+    "&lat="+encodeURIComponent(station.lat)+
+    "&zoom=14&width=620&height=280&scale=1&mapset=outdoor"+
+    "&markers=color%3Agreen%3Bsize%3Anormal%3B"+encodeURIComponent(station.lng+","+station.lat)+
+    "&apikey="+encodeURIComponent(MAPY_API_KEY);
+}
+
+function navigationUrl(station){
+  return "https://mapy.com/fnc/v1/route?end="+
+    encodeURIComponent(station.lng+","+station.lat)+
+    "&routeType=bike_mountain&navigate=true";
+}
+
+function showStationPopup(station){
+  const currentCharges=Math.floor((station.battery*1000*0.9*station.percent/100)/800);
+  const popup = `
+    <div class="station-popup">
+      <img class="popup-map" src="${mapImage(station)}" alt="Poloha stanice" onerror="this.style.display='none'">
+      <div class="popup-content">
+        <div class="popup-title">⚡ ${station.name}</div>
+        <div class="popup-location">📍 ${station.city}, Trenčiansky kraj</div>
+        ${station.planned ? '<div class="planned-badge">PLÁNOVANÁ LOKALITA SIETE</div>' : ''}
+        <div class="energy-row"><span class="energy-label">Stav energie</span><span class="energy-value">${station.percent} %</span></div>
+        <div class="progress"><div class="progress-inner ${statusClass(station.percent)}" style="width:${station.percent}%"></div></div>
+        <div class="popup-grid">
+          <div class="info-box"><div class="info-label">FVE výkon</div><div class="info-value">${station.solar} kWp</div></div>
+          <div class="info-box"><div class="info-label">Batéria</div><div class="info-value">${station.battery} kWh</div></div>
+          <div class="info-box"><div class="info-label">Nabíjacie porty</div><div class="info-value">${station.ports}</div></div>
+          <div class="info-box"><div class="info-label">Aktuálne nabitia</div><div class="info-value">cca ${currentCharges}</div></div>
+        </div>
+        <a class="nav-button" href="${navigationUrl(station)}" target="_blank" rel="noopener">📍 NAVIGOVAŤ NA STANICU</a>
+        <a class="location-button" href="https://mapy.com/fnc/v1/showmap?mapset=outdoor&center=${station.lng},${station.lat}&zoom=15&marker=true" target="_blank" rel="noopener">Otvoriť miesto v Mapy.com</a>
+      </div>
+    </div>`;
+  return popup;
+}
+
+const stationLayer=L.layerGroup().addTo(map);
+
+stations.forEach(station=>{
+  const icon=L.divIcon({
+    className:"",
+    html:`<div class="station-icon ${statusClass(station.percent)} planned">⚡</div>`,
+    iconSize:[26,26],iconAnchor:[13,13],popupAnchor:[0,-12]
+  });
+  const marker=L.marker([station.lat,station.lng],{
+    icon,pane:"stationsPane",riseOnHover:true,zIndexOffset:1000
+  });
+  marker.bindPopup(showStationPopup(station),{
+    maxWidth:320,minWidth:285,closeButton:true,autoPan:true,
+    autoPanPadding:[20,90],keepInView:true
+  });
+  stationLayer.addLayer(marker);
+});
+
+async function loadRegions(){
+  try{
+    const response=await fetch(REGIONS_URL,{cache:"force-cache"});
+    if(!response.ok) throw new Error("GeoJSON HTTP "+response.status);
+    const all=await response.json();
+    const skFeatures=all.features.filter(f=>String(f.properties?.id||"").startsWith("SK"));
+    if(skFeatures.length<8) throw new Error("SK regions missing");
+    regionsData={type:"FeatureCollection",features:skFeatures};
+
+    createDimmer();
+
+    regionsLayer=L.geoJSON(regionsData,{
+      pane:"regionsPane",
+      interactive:false,
+      style:f=>{
+        const id=f.properties?.id;
+        return id==="SK022"
+          ? {className:"region-trencin",fillColor:"#19a968",fillOpacity:.12,color:"#173d31",weight:3,opacity:1}
+          : {className:"region-other",fillColor:"#858e8a",fillOpacity:.68,color:"#69736e",weight:1.5,opacity:.75};
+      }
+    }).addTo(map);
+
+    borderLayer=L.geoJSON(regionsData,{
+      pane:"regionsPane",interactive:false,
+      style:{fill:false,color:"#173d31",weight:2.5,opacity:.95}
+    }).addTo(map);
+
+    const bounds=regionsLayer.getBounds();
+    map.fitBounds(bounds,{paddingTopLeft:[20,20],paddingBottomRight:[20,20],maxZoom:8});
+    updateDimmer();
+    document.getElementById("loading").style.display="none";
+  }catch(e){
+    console.error(e);
+    document.getElementById("loading").style.display="none";
+    document.getElementById("error").style.display="block";
+  }
+}
+
+map.on("move zoom resize",updateDimmer);
+map.on("popupopen",e=>{ setTimeout(()=>e.popup.update(),50); });
+window.addEventListener("resize",()=>map.invalidateSize());
+
+loadRegions();
+setTimeout(()=>{map.invalidateSize();updateDimmer()},300);
+</script>
+</body>
+</html>
