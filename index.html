@@ -1,14 +1,10 @@
 <!DOCTYPE html>
 <html lang="sk">
-
 <head>
-
 <meta charset="UTF-8">
 
-<meta
-  name="viewport"
-  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
->
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>ebike-soltech</title>
 
@@ -157,7 +153,6 @@ body {
   top: 2px;
 
   border-radius: 7px;
-
   border: 3px solid white;
 
   box-shadow:
@@ -187,10 +182,6 @@ body {
   line-height: 1;
   text-shadow: 0 1px 2px rgba(0,0,0,.35);
 }
-
-/* =========================
-   COLORS
-========================= */
 
 .status-red {
   background: #ef3b38;
@@ -384,7 +375,6 @@ body {
   position: absolute;
   left: 50%;
   top: 50%;
-
   transform: translate(-50%, -50%);
 
   width: min(90%, 420px);
@@ -474,115 +464,91 @@ body {
 
 }
 
-/* =========================
-   SMALL MARKERS
-========================= */
-
 .marker-small .charger-body {
   transform: scale(.82);
 }
 
 </style>
-
 </head>
 
 <body>
 
 <div id="app">
 
-<header class="header">
+  <header class="header">
 
-  <div class="logo">
-
-    <div class="logo-bolt">
-      ϟ
+    <div class="logo">
+      <div class="logo-bolt">ϟ</div>
+      <div class="logo-text">ebike-soltech</div>
     </div>
 
-    <div class="logo-text">
-      ebike-soltech
+    <div class="subtitle">
+      Interaktívna sieť nabíjacích staníc • Trenčiansky kraj
     </div>
 
-  </div>
+  </header>
 
-  <div class="subtitle">
-    Interaktívna sieť nabíjacích staníc • Trenčiansky kraj
-  </div>
+  <div id="map">
 
-</header>
+    <div class="legend">
 
+      <div class="legend-title">
+        Stav stanice
+      </div>
 
-<div id="map">
+      <div class="legend-row">
+        <span class="legend-dot legend-red"></span>
+        0–20 % – kritická
+      </div>
 
-  <!-- LEGEND -->
+      <div class="legend-row">
+        <span class="legend-dot legend-orange"></span>
+        21–40 % – nízka
+      </div>
 
-  <div class="legend">
+      <div class="legend-row">
+        <span class="legend-dot legend-yellow"></span>
+        41–60 % – stredná
+      </div>
 
-    <div class="legend-title">
-      Stav stanice
+      <div class="legend-row">
+        <span class="legend-dot legend-green"></span>
+        61–100 % – dobrá
+      </div>
+
     </div>
 
-    <div class="legend-row">
-      <span class="legend-dot legend-red"></span>
-      0–20 % – kritická
-    </div>
+    <div id="mapError" class="map-error">
 
-    <div class="legend-row">
-      <span class="legend-dot legend-orange"></span>
-      21–40 % – nízka
-    </div>
+      <div class="map-error-icon">⚠️</div>
 
-    <div class="legend-row">
-      <span class="legend-dot legend-yellow"></span>
-      41–60 % – stredná
-    </div>
+      <div class="map-error-title">
+        Mapu sa nepodarilo načítať
+      </div>
 
-    <div class="legend-row">
-      <span class="legend-dot legend-green"></span>
-      61–100 % – dobrá
-    </div>
-
-  </div>
-
-
-  <!-- ERROR -->
-
-  <div id="mapError" class="map-error">
-
-    <div class="map-error-icon">
-      ⚠️
-    </div>
-
-    <div class="map-error-title">
-      Mapu sa nepodarilo načítať
-    </div>
-
-    <div class="map-error-text">
-
-      Skontroluj oprávnenie API kľúča pre službu
-      <b>Map tiles</b>
-      a doménu
-      <b>crptexchange.github.io</b>.
+      <div class="map-error-text">
+        Skontroluj API kľúč, službu Map tiles
+        a doménu crptexchange.github.io.
+      </div>
 
     </div>
 
   </div>
-
-</div>
 
 </div>
 
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-
 <script>
 
 /* ==========================================================
    MAPY.COM API KEY
+   SEM VLOŽ NOVÝ API KĽÚČ
 ========================================================== */
 
 const MAPY_API_KEY =
-"Ld1wDiRmzkSKYG09mz9BiWl-ti-D2b_eEGv4i9eoBe0";
+"VLOZ_NOVY_API_KLUC";
 
 
 /* ==========================================================
@@ -641,88 +607,58 @@ const map = L.map("map", {
 
 
 /* ==========================================================
-   MAPY.COM OUTDOOR TILES
+   MAPY.COM MAP TILES
 ========================================================== */
 
 const mapyUrl =
-  "https://api.mapy.com/v1/maptiles/outdoor/" +
+  "https://api.mapy.com/v1/maptiles/outdoor/256/" +
   "{z}/{x}/{y}" +
-  "?apikey=" +
-  encodeURIComponent(MAPY_API_KEY) +
+  "?apikey=" + encodeURIComponent(MAPY_API_KEY) +
   "&lang=sk";
 
 
-const mapyLayer = L.tileLayer(
-  mapyUrl,
-  {
+const mapyLayer = L.tileLayer(mapyUrl, {
 
-    minZoom: 7,
+  minZoom: 7,
 
-    maxZoom: 18,
+  maxZoom: 18,
 
-    tileSize: 256,
+  tileSize: 256,
 
-    updateWhenIdle: true,
+  updateWhenIdle: true,
 
-    updateWhenZooming: false,
+  updateWhenZooming: false,
 
-    keepBuffer: 2,
+  keepBuffer: 2,
 
-    attribution:
-      '<a href="https://mapy.com/" target="_blank">' +
-      'Mapy.com</a> © Seznam.cz a ďalší'
+  attribution:
+    '<a href="https://mapy.com/" target="_blank">Mapy.com</a> ' +
+    '© Seznam.cz a ďalší'
 
-  }
-);
+});
 
 
-/* ==========================================================
-   MAP TILE STATUS
-========================================================== */
+mapyLayer.on("tileerror", function(e) {
 
-let mapTilesLoaded = false;
+  console.error(
+    "Mapy.com tile error:",
+    e
+  );
 
-let tileErrors = 0;
+  document.getElementById(
+    "mapError"
+  ).style.display = "block";
 
-
-mapyLayer.on(
-  "tileload",
-  function () {
-
-    mapTilesLoaded = true;
-
-    document
-      .getElementById("mapError")
-      .style.display = "none";
-
-  }
-);
+});
 
 
-mapyLayer.on(
-  "tileerror",
-  function (e) {
+mapyLayer.on("tileload", function() {
 
-    console.error(
-      "Mapy.com tile error:",
-      e
-    );
+  document.getElementById(
+    "mapError"
+  ).style.display = "none";
 
-    tileErrors++;
-
-    if (
-      !mapTilesLoaded &&
-      tileErrors >= 5
-    ) {
-
-      document
-        .getElementById("mapError")
-        .style.display = "block";
-
-    }
-
-  }
-);
+});
 
 
 mapyLayer.addTo(map);
@@ -878,62 +814,24 @@ const stations = [
 
 
 /* ==========================================================
-   STATUS COLOR
+   STATUS
 ========================================================== */
 
 function getStatusClass(percent) {
 
   if (percent <= 20) {
-
     return "status-red";
-
   }
 
   if (percent <= 40) {
-
     return "status-orange";
-
   }
 
   if (percent <= 60) {
-
     return "status-yellow";
-
   }
 
   return "status-green";
-
-}
-
-
-/* ==========================================================
-   POPUP IMAGE
-========================================================== */
-
-function popupImage(station) {
-
-  return `
-
-    <div
-      class="popup-image"
-      style="
-        background:
-        linear-gradient(
-          135deg,
-          #173d31,
-          #4e806d
-        );
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        color:white;
-        font-size:46px;
-      "
-    >
-      ⚡
-    </div>
-
-  `;
 
 }
 
@@ -951,8 +849,7 @@ function createPopup(station) {
 
   const estimatedCharges =
     Math.floor(
-      chargeCapacity /
-      ebikeBattery
+      chargeCapacity / ebikeBattery
     );
 
   const availableEnergy =
@@ -969,16 +866,30 @@ function createPopup(station) {
     );
 
   const statusClass =
-    getStatusClass(
-      station.percent
-    );
-
+    getStatusClass(station.percent);
 
   return `
 
     <div class="station-popup">
 
-      ${popupImage(station)}
+      <div
+        class="popup-image"
+        style="
+          background:
+          linear-gradient(
+            135deg,
+            #173d31,
+            #4e806d
+          );
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          color:white;
+          font-size:46px;
+        "
+      >
+        ⚡
+      </div>
 
       <div class="popup-content">
 
@@ -987,8 +898,7 @@ function createPopup(station) {
         </div>
 
         <div class="popup-location">
-          ${station.city},
-          Trenčiansky kraj
+          ${station.city}, Trenčiansky kraj
         </div>
 
         <div class="energy-row">
@@ -1072,18 +982,12 @@ function createPopup(station) {
             margin-bottom:12px;
           "
         >
-
           Pri plnej batérii stanica dokáže uložiť
-          približne ${estimatedCharges}
-          plných nabití pri priemernej kapacite
-          e-bike batérie 800 Wh.
-
+          približne ${estimatedCharges} plných nabití
+          pri priemernej kapacite e-bike batérie 800 Wh.
         </div>
 
-        <button
-          class="charge-button"
-          type="button"
-        >
+        <button class="charge-button">
           ⚡ Nabíjacia stanica
         </button>
 
@@ -1097,141 +1001,111 @@ function createPopup(station) {
 
 
 /* ==========================================================
-   CREATE MARKERS
+   MARKERS
 ========================================================== */
 
 const markerLayer =
   L.layerGroup().addTo(map);
 
 
-stations.forEach(
-  station => {
+stations.forEach(station => {
 
-    const statusClass =
-      getStatusClass(
-        station.percent
-      );
+  const statusClass =
+    getStatusClass(
+      station.percent
+    );
 
+  const icon = L.divIcon({
 
-    const icon =
-      L.divIcon({
+    className: "",
 
-        className: "",
+    html: `
 
-        html: `
+      <div class="charger-icon">
 
-          <div class="charger-icon">
+        <div
+          class="charger-body ${statusClass}"
+        >
 
-            <div
-              class="charger-body ${statusClass}"
-            >
-
-              <div class="charger-bolt">
-                ⚡
-              </div>
-
-            </div>
-
+          <div class="charger-bolt">
+            ⚡
           </div>
 
-        `,
+        </div>
 
-        iconSize: [
-          42,
-          32
-        ],
+      </div>
 
-        iconAnchor: [
-          21,
-          16
-        ],
+    `,
 
-        popupAnchor: [
-          0,
-          -15
-        ]
+    iconSize: [42, 32],
 
-      });
+    iconAnchor: [21, 16],
+
+    popupAnchor: [0, -15]
+
+  });
 
 
-    const marker =
-      L.marker(
-        [
-          station.lat,
-          station.lng
-        ],
-        {
-          icon: icon,
-          riseOnHover: true
-        }
-      );
-
-
-    marker.bindPopup(
-      createPopup(station),
+  const marker =
+    L.marker(
+      [station.lat, station.lng],
       {
-        maxWidth: 300,
-
-        closeButton: true,
-
-        autoPan: true,
-
-        autoPanPaddingTopLeft:
-          [20, 100],
-
-        autoPanPaddingBottomRight:
-          [20, 100]
+        icon: icon,
+        riseOnHover: true
       }
     );
 
 
-    marker.addTo(
-      markerLayer
-    );
+  marker.bindPopup(
+    createPopup(station),
+    {
+      maxWidth: 300,
+      closeButton: true,
+      autoPan: true,
+      autoPanPaddingTopLeft: [20, 100],
+      autoPanPaddingBottomRight: [20, 100]
+    }
+  );
 
-  }
-);
+
+  marker.addTo(markerLayer);
+
+});
 
 
 /* ==========================================================
    MARKER SIZE
 ========================================================== */
 
-map.on(
-  "zoomend",
-  function() {
+map.on("zoomend", function() {
 
-    const zoom =
-      map.getZoom();
+  const zoom =
+    map.getZoom();
 
-    const markers =
-      document.querySelectorAll(
-        ".charger-icon"
-      );
-
-
-    markers.forEach(
-      marker => {
-
-        if (zoom <= 8) {
-
-          marker.classList.add(
-            "marker-small"
-          );
-
-        } else {
-
-          marker.classList.remove(
-            "marker-small"
-          );
-
-        }
-
-      }
+  const markers =
+    document.querySelectorAll(
+      ".charger-icon"
     );
 
-  }
-);
+  markers.forEach(marker => {
+
+    if (zoom <= 8) {
+
+      marker.classList.add(
+        "marker-small"
+      );
+
+    } else {
+
+      marker.classList.remove(
+        "marker-small"
+      );
+
+    }
+
+  });
+
+});
 
 
 /* ==========================================================
@@ -1241,10 +1115,7 @@ map.on(
 map.fitBounds(
   SLOVAKIA_BOUNDS,
   {
-    padding: [
-      20,
-      20
-    ]
+    padding: [20, 20]
   }
 );
 
@@ -1253,20 +1124,15 @@ map.fitBounds(
    MOBILE
 ========================================================== */
 
-map.whenReady(
-  function() {
+map.whenReady(function() {
 
-    setTimeout(
-      function() {
+  setTimeout(function() {
 
-        map.invalidateSize();
+    map.invalidateSize();
 
-      },
-      300
-    );
+  }, 300);
 
-  }
-);
+});
 
 
 window.addEventListener(
@@ -1281,5 +1147,4 @@ window.addEventListener(
 </script>
 
 </body>
-
 </html>
