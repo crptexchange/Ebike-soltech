@@ -1,373 +1,320 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="sk">
+
 <head>
 
-<meta charset="utf-8">
-<meta name="viewport"
-      content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+>
 
 <title>ebike-soltech</title>
 
 <link
   rel="stylesheet"
   href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
->
+/>
 
 <style>
+
+/* =========================================================
+   ZÁKLAD
+========================================================= */
 
 *{
   box-sizing:border-box;
 }
 
 html,
-body,
-#app{
-  height:100%;
-  margin:0;
-}
-
 body{
+  margin:0;
+  padding:0;
+  width:100%;
+  height:100%;
+  overflow:hidden;
   font-family:
     -apple-system,
     BlinkMacSystemFont,
     "Segoe UI",
+    Roboto,
+    Arial,
     sans-serif;
-
   background:#eef3ef;
   color:#17372b;
-  overflow:hidden;
 }
 
 #app{
+  width:100%;
+  height:100%;
   display:flex;
   flex-direction:column;
 }
 
-/* =====================================================
-   HEADER
-===================================================== */
 
-.top{
+/* =========================================================
+   HLAVIČKA
+========================================================= */
 
-  height:76px;
-  min-height:76px;
+.header{
 
-  background:#fff;
+  height:92px;
+  min-height:92px;
+
+  background:#ffffff;
 
   display:flex;
   align-items:center;
 
   padding:
-    8px
+    env(safe-area-inset-top)
+    20px
+    0
     20px;
 
   box-shadow:
     0 2px 14px rgba(0,0,0,.10);
 
   position:relative;
-  z-index:1000;
+  z-index:5000;
 }
 
 .brand{
-
-  font-size:23px;
-  font-weight:900;
-
-  line-height:1.05;
-
-  letter-spacing:-.5px;
+  display:flex;
+  align-items:center;
+  gap:11px;
 }
 
-.brand span{
+.brand-icon{
+  font-size:38px;
+  line-height:1;
+  color:#ffb000;
+}
+
+.brand-title{
+  font-size:27px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:-1px;
   color:#17372b;
 }
 
-.brand small{
-
-  display:block;
-
-  font-size:11px;
-
-  color:#7b8882;
-
-  font-weight:600;
-
-  margin-top:5px;
-
-  letter-spacing:.1px;
+.brand-subtitle{
+  margin-top:7px;
+  font-size:13px;
+  line-height:1;
+  font-weight:650;
+  color:#718079;
 }
 
-/* =====================================================
-   MAP
-===================================================== */
+
+/* =========================================================
+   MAPA
+========================================================= */
 
 #map{
 
   flex:1;
 
+  width:100%;
   min-height:0;
 
-  width:100%;
+  background:#dfe4e1;
 
-  background:#d9ddda;
+  position:relative;
+
+  touch-action:
+    pan-x
+    pan-y;
 }
 
-/* =====================================================
+
+/* =========================================================
    LEAFLET
-===================================================== */
+========================================================= */
+
+.leaflet-container{
+  background:#dfe4e1;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
 
 .leaflet-control-zoom{
-
   border:none !important;
-
   box-shadow:
-    0 2px 8px rgba(0,0,0,.22) !important;
+    0 2px 8px rgba(0,0,0,.25) !important;
 }
 
 .leaflet-control-zoom a{
-
-  width:44px !important;
-  height:44px !important;
-
-  line-height:44px !important;
-
-  font-size:28px !important;
-
   color:#111 !important;
-
-  background:#fff !important;
+  font-weight:900 !important;
 }
 
 .leaflet-control-attribution{
-
-  font-size:9px;
-
-  background:rgba(255,255,255,.90);
+  font-size:9px !important;
+  background:rgba(255,255,255,.88) !important;
 }
 
-/* =====================================================
-   SLOVAKIA MASK
-===================================================== */
 
-/*
-  Všetko mimo Slovenska je prekryté jediným SVG
-  overlayom. Mapa pod ním stále funguje normálne,
-  ale používateľ vidí iba Slovensko.
-*/
+/* =========================================================
+   STANICA – MALÝ FOTOVOLTAICKÝ PANEL
+========================================================= */
 
-.slovakia-mask{
+.station-marker{
 
-  pointer-events:none;
-
-  position:absolute;
-
-  inset:0;
-
-  z-index:450;
-}
-
-.slovakia-mask svg{
-
-  width:100%;
-  height:100%;
-
-  display:block;
-}
-
-/* =====================================================
-   STANICA
-===================================================== */
-
-.station-wrap{
+  width:31px;
+  height:31px;
 
   position:relative;
 
-  width:30px;
-  height:38px;
-
   display:flex;
-
   align-items:center;
   justify-content:center;
+
+  transform:
+    rotate(-3deg);
+
+  filter:
+    drop-shadow(
+      0 3px 4px rgba(0,0,0,.28)
+    );
 }
 
-.station{
 
-  width:27px;
-  height:27px;
-
-  border-radius:6px;
-
-  border:2px solid #fff;
-
-  box-shadow:
-    0 3px 10px rgba(0,0,0,.32);
-
-  position:relative;
-
-  transform:rotate(-45deg);
-
-  display:flex;
-
-  align-items:center;
-  justify-content:center;
-}
-
-.station:after{
-
-  content:"";
-
-  position:absolute;
-
-  width:8px;
-  height:8px;
-
-  bottom:-5px;
-  left:7px;
-
-  background:inherit;
-
-  border-right:2px solid #fff;
-  border-bottom:2px solid #fff;
-
-  transform:rotate(0deg);
-}
-
-/* FV PANEL */
+/* panel */
 
 .station-panel{
 
-  width:16px;
-  height:10px;
+  width:29px;
+  height:23px;
 
-  border:1px solid rgba(255,255,255,.9);
+  border-radius:6px;
 
-  border-radius:2px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(255,255,255,.35),
-      rgba(255,255,255,.05)
-    );
-
-  transform:rotate(45deg);
+  border:2px solid #ffffff;
 
   position:relative;
 
-  z-index:3;
+  overflow:hidden;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(0,0,0,.10);
 }
 
-.station-panel:before{
+
+/* malé FV články */
+
+.station-panel::before{
 
   content:"";
 
   position:absolute;
 
-  left:50%;
-  top:0;
+  inset:3px;
 
-  width:1px;
-  height:100%;
+  background:
 
-  background:rgba(255,255,255,.55);
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.22) 1px,
+      transparent 1px
+    ),
+
+    linear-gradient(
+      0deg,
+      rgba(255,255,255,.22) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    6px 6px;
+
+  opacity:.8;
 }
 
-.station-panel:after{
 
-  content:"⚡";
+/* blesk */
+
+.station-lightning{
 
   position:absolute;
 
-  left:2px;
-  top:-7px;
+  z-index:5;
 
-  color:#ffd600;
+  left:50%;
+  top:50%;
 
-  font-size:11px;
+  transform:
+    translate(-50%,-53%);
+
+  color:#fff;
+
+  font-size:15px;
 
   font-weight:900;
 
   text-shadow:
-    0 1px 2px rgba(0,0,0,.4);
+    0 1px 2px rgba(0,0,0,.5);
 }
 
-/* =====================================================
-   FARBY
-===================================================== */
 
-.station-red{
-  background:#ef3d3d;
+/* farby */
+
+.station-red .station-panel{
+  background:#e53935;
 }
 
-.station-orange{
-  background:#f39a16;
+.station-orange .station-panel{
+  background:#f39c12;
 }
 
-.station-yellow{
-  background:#f1c40f;
+.station-yellow .station-panel{
+  background:#f4c400;
 }
 
-.station-green{
-  background:#18a968;
+.station-green .station-panel{
+  background:#19a766;
 }
 
-/* =====================================================
-   ANIMÁCIA
-===================================================== */
 
-.station-pulse{
+/* =========================================================
+   JEMNÁ ANIMÁCIA STANÍC
+========================================================= */
 
-  position:absolute;
-
-  width:28px;
-  height:28px;
-
-  border-radius:50%;
-
-  opacity:0;
-
+.station-marker{
   animation:
-    stationPulse 2.5s infinite;
+    stationFloat 3.5s ease-in-out infinite;
 }
 
-.station-red .station-pulse{
-  background:#ef3d3d;
-}
-
-.station-orange .station-pulse{
-  background:#f39a16;
-}
-
-.station-yellow .station-pulse{
-  background:#f1c40f;
-}
-
-.station-green .station-pulse{
-  background:#18a968;
-}
-
-@keyframes stationPulse{
+@keyframes stationFloat{
 
   0%{
-    transform:scale(.7);
-    opacity:.45;
+    transform:
+      translateY(0)
+      rotate(-3deg);
   }
 
-  70%{
-    transform:scale(1.8);
-    opacity:0;
+  50%{
+    transform:
+      translateY(-2px)
+      rotate(-1deg);
   }
 
   100%{
-    opacity:0;
+    transform:
+      translateY(0)
+      rotate(-3deg);
   }
 
 }
 
-/* =====================================================
+
+/* =========================================================
    POPUP
-===================================================== */
+========================================================= */
 
 .leaflet-popup-content-wrapper{
 
@@ -375,238 +322,256 @@ body{
 
   box-shadow:
     0 8px 30px rgba(0,0,0,.20);
+
+  padding:0;
 }
 
 .leaflet-popup-content{
 
-  margin:14px;
+  margin:0;
 
-  width:280px !important;
+  width:310px !important;
+
+  max-width:
+    calc(100vw - 40px);
 }
 
-.popup{
+.station-card{
 
-  color:#17372b;
+  overflow:hidden;
+
+  background:#fff;
+
+  border-radius:16px;
 }
 
-.popup-title{
+
+/* obrázok / hero */
+
+.station-photo{
+
+  height:135px;
+
+  position:relative;
+
+  overflow:hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      #1b6b4c,
+      #72c59e
+    );
+}
+
+.station-photo::after{
+
+  content:"";
+
+  position:absolute;
+
+  inset:0;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.40),
+      transparent 60%
+    );
+}
+
+.station-photo-icon{
+
+  position:absolute;
+
+  inset:0;
 
   display:flex;
 
   align-items:center;
+  justify-content:center;
 
-  gap:8px;
+  font-size:65px;
 
-  font-size:18px;
+  z-index:1;
 
-  font-weight:900;
-
-  margin-bottom:3px;
+  opacity:.9;
 }
 
-.popup-location{
+.station-photo-title{
 
-  color:#78857f;
+  position:absolute;
+
+  left:14px;
+  bottom:12px;
+
+  color:#fff;
+
+  z-index:3;
+
+  font-size:18px;
+  font-weight:900;
+}
+
+
+/* telo */
+
+.station-body{
+  padding:14px;
+}
+
+.station-location{
 
   font-size:12px;
+
+  color:#718079;
 
   margin-bottom:10px;
 }
 
-.status{
+.status-line{
 
-  display:inline-flex;
+  display:flex;
+
+  justify-content:space-between;
 
   align-items:center;
 
-  gap:6px;
-
-  padding:5px 9px;
-
-  border-radius:20px;
-
-  background:#edf7f1;
-
-  color:#15965c;
-
-  font-size:11px;
-
-  font-weight:800;
-
-  margin-bottom:12px;
-}
-
-.status-dot{
-
-  width:7px;
-  height:7px;
-
-  border-radius:50%;
-
-  background:#19a866;
-}
-
-.capacity-title{
-
   font-size:12px;
 
-  color:#68766f;
-
-  margin-bottom:4px;
-}
-
-.capacity{
-
-  font-size:25px;
-
-  font-weight:900;
+  font-weight:800;
 
   margin-bottom:6px;
 }
 
-.capacity-bar{
+.status-value{
+  font-size:14px;
+}
 
+.capacity-meter{
+
+  width:100%;
   height:9px;
-
-  border-radius:20px;
 
   background:#e8ece9;
 
+  border-radius:10px;
+
   overflow:hidden;
 
-  margin-bottom:13px;
+  margin-bottom:14px;
 }
 
-.capacity-fill{
+.capacity-meter span{
+
+  display:block;
 
   height:100%;
 
-  border-radius:20px;
+  border-radius:10px;
 }
 
-.info-grid{
+
+/* štatistiky */
+
+.station-grid{
 
   display:grid;
 
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:
+    1fr 1fr;
 
   gap:7px;
 
-  margin-top:8px;
+  margin-bottom:12px;
 }
 
-.info-box{
+.station-stat{
 
-  border:1px solid #e5eae7;
+  background:#f4f7f5;
 
   border-radius:10px;
 
   padding:9px;
-
-  background:#fafcfb;
 }
 
-.info-box strong{
+.station-stat strong{
 
   display:block;
 
   font-size:15px;
 
-  margin-bottom:2px;
+  color:#17372b;
 }
 
-.info-box span{
+.station-stat small{
 
   display:block;
 
-  color:#78857f;
+  margin-top:2px;
+
+  color:#718079;
 
   font-size:10px;
-
-  line-height:1.25;
 }
 
-.energy{
 
-  margin-top:10px;
+/* navigácia */
+
+.navigate-btn{
+
+  display:block;
+
+  width:100%;
 
   padding:11px;
 
-  border-radius:11px;
-
-  background:#eef8f3;
-
-  border:1px solid #d9eee3;
-}
-
-.energy strong{
-
-  display:block;
-
-  font-size:13px;
-
-  margin-bottom:3px;
-}
-
-.energy span{
-
-  font-size:11px;
-
-  color:#63726b;
-
-  line-height:1.35;
-}
-
-.nav-button{
-
-  display:block;
-
-  text-align:center;
-
-  margin-top:11px;
-
-  padding:10px;
-
   border-radius:10px;
 
-  background:#16a566;
+  background:#19a766;
 
   color:#fff;
 
   text-decoration:none;
 
-  font-size:12px;
+  text-align:center;
 
   font-weight:900;
+
+  font-size:13px;
+
 }
 
-/* =====================================================
+
+/* =========================================================
    LEGENDA
-===================================================== */
+========================================================= */
 
 .legend{
 
   background:#fff;
 
-  padding:12px 14px;
+  border-radius:15px;
 
-  border-radius:14px;
+  padding:13px 15px;
 
   box-shadow:
     0 4px 18px rgba(0,0,0,.18);
 
-  font-size:11px;
+  font-size:12px;
 
-  line-height:20px;
+  line-height:21px;
+
+  min-width:185px;
 }
 
 .legend-title{
 
-  font-size:13px;
+  font-size:16px;
 
   font-weight:900;
 
-  margin-bottom:5px;
+  margin-bottom:6px;
 }
 
 .legend-row{
@@ -615,135 +580,233 @@ body{
 
   align-items:center;
 
-  gap:7px;
+  gap:8px;
 }
 
 .legend-dot{
 
-  width:11px;
-  height:11px;
+  width:12px;
+  height:12px;
 
   border-radius:50%;
 
-  display:inline-block;
+  flex:none;
 }
 
 .red{
-  background:#ef3d3d;
+  background:#e53935;
 }
 
 .orange{
-  background:#f39a16;
+  background:#f39c12;
 }
 
 .yellow{
-  background:#f1c40f;
+  background:#f4c400;
 }
 
 .green{
-  background:#18a968;
+  background:#19a766;
 }
 
-/* =====================================================
+
+/* =========================================================
+   TRENČIANSKY KRAJ LABEL
+========================================================= */
+
+.region-label{
+
+  background:
+    rgba(255,255,255,.94);
+
+  border:none;
+
+  border-radius:9px;
+
+  padding:7px 10px;
+
+  box-shadow:
+    0 3px 12px rgba(0,0,0,.18);
+
+  color:#17372b;
+
+  font-size:12px;
+
+  font-weight:900;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+#loading{
+
+  position:absolute;
+
+  z-index:9999;
+
+  inset:0;
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  background:#eef3ef;
+
+  transition:
+    opacity .35s ease;
+
+  pointer-events:none;
+}
+
+.loading-box{
+
+  text-align:center;
+}
+
+.loading-icon{
+
+  font-size:45px;
+
+  margin-bottom:12px;
+}
+
+.loading-title{
+
+  font-size:18px;
+
+  font-weight:900;
+
+  color:#17372b;
+}
+
+.loading-sub{
+
+  margin-top:6px;
+
+  font-size:12px;
+
+  color:#718079;
+}
+
+
+/* =========================================================
    MOBILE
-===================================================== */
+========================================================= */
 
 @media(max-width:600px){
 
-  .top{
+  .header{
 
-    height:74px;
-    min-height:74px;
+    height:102px;
+    min-height:102px;
 
-    padding-left:17px;
+    padding:
+      10px
+      16px
+      8px
+      16px;
   }
 
-  .brand{
-
-    font-size:21px;
+  .brand-icon{
+    font-size:34px;
   }
 
-  .brand small{
-
-    font-size:10px;
+  .brand-title{
+    font-size:25px;
   }
 
-  .leaflet-control-zoom{
-
-    margin-top:8px !important;
-    margin-left:8px !important;
-  }
-
-  .leaflet-control-zoom a{
-
-    width:42px !important;
-    height:42px !important;
-
-    line-height:42px !important;
+  .brand-subtitle{
+    font-size:12px;
   }
 
   .legend{
 
-    margin-right:8px !important;
-    margin-bottom:8px !important;
+    margin-bottom:
+      env(safe-area-inset-bottom);
+
+    margin-right:3px;
+
   }
 
 }
 
-/* =====================================================
-   LOADING
-===================================================== */
 
-.map-loading{
+/* =========================================================
+   VYPNUTIE ANIMÁCIE PRI ZOOMOVANÍ
+   aby bola mapa plynulejšia
+========================================================= */
 
-  position:absolute;
-
-  left:50%;
-  top:50%;
-
-  transform:translate(-50%,-50%);
-
-  z-index:900;
-
-  background:#fff;
-
-  padding:13px 17px;
-
-  border-radius:12px;
-
-  box-shadow:
-    0 5px 20px rgba(0,0,0,.18);
-
-  font-size:12px;
-
-  font-weight:800;
-
-  color:#17372b;
+.leaflet-zoom-anim .station-marker{
+  animation:none;
 }
 
 </style>
 
 </head>
 
+
 <body>
 
 <div id="app">
 
-  <header class="top">
+
+  <!-- HLAVIČKA -->
+
+  <header class="header">
 
     <div class="brand">
 
-      ⚡ <span>ebike-soltech</span>
+      <div class="brand-icon">
+        ⚡
+      </div>
 
-      <small>
-        Interaktívna sieť nabíjacích staníc • Trenčiansky kraj
-      </small>
+      <div>
+
+        <div class="brand-title">
+          ebike-soltech
+        </div>
+
+        <div class="brand-subtitle">
+          Interaktívna sieť nabíjacích staníc • Trenčiansky kraj
+        </div>
+
+      </div>
 
     </div>
 
   </header>
 
-  <main id="map"></main>
+
+  <!-- MAPA -->
+
+  <main id="map">
+
+    <div id="loading">
+
+      <div class="loading-box">
+
+        <div class="loading-icon">
+          ⚡
+        </div>
+
+        <div class="loading-title">
+          Načítavam mapu
+        </div>
+
+        <div class="loading-sub">
+          ebike-soltech
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
 
 </div>
 
@@ -753,931 +816,973 @@ body{
 
 <script>
 
-/* =====================================================
-   MAPY.COM API
-===================================================== */
-
-/*
-  SEM VLOŽ NOVÝ API KĽÚČ Z MAPY.COM
-
-  Kľúč musí mať povolené:
-  - Map tiles
-
-  Pri HTTP refereri môžeš povoliť:
-  crptexchange.github.io
-*/
+/* =========================================================
+   API MAPY.COM
+========================================================= */
 
 const MAPY_API_KEY =
-  "VLOZ_NOVY_API_KLUC";
+  "2Saa1wL54-KI04PxOV13VoXr8Z5Eff-wxYWUG_-vUkg";
 
 
-/* =====================================================
-   MAPA
-===================================================== */
+/* =========================================================
+   DÁTA STANÍC
+========================================================= */
 
-const map = L.map("map",{
+/*
+   Každá stanica:
 
-  zoomControl:true,
+   názov
+   latitude
+   longitude
+   kapacita %
+   obsadené konektory
+   batéria kWh
+   výkon FV kWp
+*/
 
-  minZoom:7,
-
-  maxZoom:18,
-
-  zoomSnap:0.25,
-
-  zoomDelta:0.5,
-
-  wheelPxPerZoomLevel:100,
-
-  preferCanvas:true,
-
-  fadeAnimation:false,
-
-  markerZoomAnimation:true,
-
-  zoomAnimation:true
-
-}).setView(
-
-  [48.72,19.45],
-
-  8
-
-);
-
-
-/* =====================================================
-   MAPY.COM TURISTICKÁ MAPA
-===================================================== */
-
-const outdoor = L.tileLayer(
-
-  "https://api.mapy.com/v1/maptiles/" +
-  "outdoor/{z}/{x}/{y}" +
-  "?apikey=" + MAPY_API_KEY +
-  "&lang=sk" +
-  "&tileSize=256",
+const stations = [
 
   {
+    name:"Trenčín",
+    lat:48.8945,
+    lon:18.0440,
+    pct:78,
+    occupied:4,
+    battery:10,
+    solar:2.2
+  },
+
+  {
+    name:"Beckov",
+    lat:48.7880,
+    lon:17.8980,
+    pct:35,
+    occupied:2,
+    battery:7,
+    solar:2.0
+  },
+
+  {
+    name:"Nové Mesto nad Váhom",
+    lat:48.7570,
+    lon:17.8300,
+    pct:64,
+    occupied:3,
+    battery:10,
+    solar:2.4
+  },
+
+  {
+    name:"Myjava",
+    lat:48.7580,
+    lon:17.5680,
+    pct:86,
+    occupied:1,
+    battery:10,
+    solar:2.5
+  },
+
+  {
+    name:"Dubnica nad Váhom",
+    lat:48.9610,
+    lon:18.1670,
+    pct:52,
+    occupied:3,
+    battery:8,
+    solar:2.2
+  },
+
+  {
+    name:"Ilava",
+    lat:49.0010,
+    lon:18.2360,
+    pct:42,
+    occupied:4,
+    battery:8,
+    solar:2.0
+  },
+
+  {
+    name:"Púchov",
+    lat:49.1240,
+    lon:18.3250,
+    pct:18,
+    occupied:7,
+    battery:10,
+    solar:2.4
+  },
+
+  {
+    name:"Považská Bystrica",
+    lat:49.1150,
+    lon:18.4490,
+    pct:67,
+    occupied:2,
+    battery:10,
+    solar:2.5
+  },
+
+  {
+    name:"Trenčianske Teplice",
+    lat:48.9100,
+    lon:18.1680,
+    pct:73,
+    occupied:2,
+    battery:8,
+    solar:2.0
+  },
+
+  {
+    name:"Nemšová",
+    lat:48.9670,
+    lon:18.1190,
+    pct:29,
+    occupied:5,
+    battery:7,
+    solar:2.0
+  },
+
+  {
+    name:"Bánovce nad Bebravou",
+    lat:48.7210,
+    lon:18.2570,
+    pct:81,
+    occupied:1,
+    battery:10,
+    solar:2.4
+  },
+
+  {
+    name:"Bojnice",
+    lat:48.7810,
+    lon:18.5850,
+    pct:12,
+    occupied:7,
+    battery:8,
+    solar:2.2
+  },
+
+  {
+    name:"Partizánske",
+    lat:48.6290,
+    lon:18.3840,
+    pct:58,
+    occupied:3,
+    battery:7,
+    solar:2.0
+  },
+
+  {
+    name:"Brezová pod Bradlom",
+    lat:48.6640,
+    lon:17.5400,
+    pct:91,
+    occupied:1,
+    battery:10,
+    solar:2.5
+  },
+
+  {
+    name:"Čachtice",
+    lat:48.7140,
+    lon:17.7870,
+    pct:48,
+    occupied:4,
+    battery:8,
+    solar:2.2
+  },
+
+  {
+    name:"Duchonka",
+    lat:48.6980,
+    lon:18.0700,
+    pct:15,
+    occupied:6,
+    battery:7,
+    solar:2.0
+  },
+
+  {
+    name:"Manínska tiesňava",
+    lat:49.1760,
+    lon:18.4860,
+    pct:76,
+    occupied:1,
+    battery:10,
+    solar:2.5
+  },
+
+  {
+    name:"Stará Turá",
+    lat:48.7780,
+    lon:17.6950,
+    pct:55,
+    occupied:3,
+    battery:8,
+    solar:2.0
+  },
+
+  {
+    name:"Handlová",
+    lat:48.7270,
+    lon:18.7600,
+    pct:63,
+    occupied:2,
+    battery:10,
+    solar:2.4
+  },
+
+  {
+    name:"Inovec",
+    lat:48.8100,
+    lon:18.0300,
+    pct:88,
+    occupied:1,
+    battery:10,
+    solar:2.5
+  },
+
+  {
+    name:"Zelená Voda",
+    lat:48.7600,
+    lon:17.9880,
+    pct:24,
+    occupied:6,
+    battery:7,
+    solar:2.0
+  },
+
+  {
+    name:"Skalka",
+    lat:48.8940,
+    lon:18.0090,
+    pct:9,
+    occupied:7,
+    battery:8,
+    solar:2.2
+  },
+
+  {
+    name:"Lazy pod Makytou",
+    lat:49.2210,
+    lon:18.2340,
+    pct:69,
+    occupied:2,
+    battery:10,
+    solar:2.5
+  }
+
+];
+
+
+/* =========================================================
+   FARBA STANICE
+========================================================= */
+
+function stationStatus(pct){
+
+  if(pct <= 20){
+
+    return {
+      className:"station-red",
+      color:"#e53935",
+      label:"Kriticky nízka kapacita"
+    };
+
+  }
+
+  if(pct <= 40){
+
+    return {
+      className:"station-orange",
+      color:"#f39c12",
+      label:"Nízka kapacita"
+    };
+
+  }
+
+  if(pct <= 60){
+
+    return {
+      className:"station-yellow",
+      color:"#f4c400",
+      label:"Stredná kapacita"
+    };
+
+  }
+
+  return {
+    className:"station-green",
+    color:"#19a766",
+    label:"Dobrá kapacita"
+  };
+
+}
+
+
+/* =========================================================
+   MAPA
+========================================================= */
+
+const map = L.map(
+  "map",
+  {
+
+    zoomControl:true,
 
     minZoom:7,
 
     maxZoom:18,
 
-    maxNativeZoom:18,
+    zoomSnap:.25,
 
-    attribution:
-      '<a href="https://mapy.com/" target="_blank">' +
-      'Mapy.com</a> | ' +
-      '© OpenStreetMap contributors',
+    zoomDelta:.5,
+
+    wheelPxPerZoomLevel:90,
+
+    preferCanvas:true,
+
+    inertia:true,
+
+    inertiaDeceleration:3000,
+
+    worldCopyJump:false,
+
+    zoomAnimation:true,
+
+    fadeAnimation:false,
+
+    markerZoomAnimation:false
+
+  }
+);
+
+
+/* =========================================================
+   MAPY.COM TURISTICKÁ MAPA
+========================================================= */
+
+const mapTiles = L.tileLayer(
+
+  "https://api.mapy.com/v1/maptiles/outdoor/256/{z}/{x}/{y}?apikey=" +
+  MAPY_API_KEY,
+
+  {
+
+    minZoom:7,
+
+    maxZoom:19,
+
+    tileSize:256,
 
     updateWhenZooming:false,
 
     updateWhenIdle:true,
 
-    keepBuffer:2
+    keepBuffer:3,
+
+    attribution:
+      '<a href="https://mapy.com/" target="_blank">Mapy.com</a> ' +
+      '© Seznam.cz a ďalší'
 
   }
 
 ).addTo(map);
 
 
-/* =====================================================
-   SLOVENSKO – HRANICA
-===================================================== */
+/* =========================================================
+   PANE PRE MASKU
+========================================================= */
 
-const slovakia = [
+map.createPane("outsideMask");
 
-  [49.496230,18.853144],
-  [49.435846,18.909575],
-  [49.571574,19.320713],
-  [49.217125,19.825023],
-  [49.431453,20.415839],
-  [49.328772,20.887955],
-  [49.470107,21.607808],
-  [49.085738,22.558138],
-  [48.825392,22.280842],
-  [48.422264,22.085608],
-  [48.319971,21.872236],
-  [48.623854,20.801294],
-  [48.562850,20.473562],
-  [48.327567,20.239054],
-  [48.202691,19.769471],
-  [48.266615,19.661364],
-  [48.111379,19.174365],
-  [48.081768,18.777025],
-  [47.880954,18.696513],
-  [47.758429,17.857133],
-  [47.867466,17.488473],
-  [48.123497,16.979667],
-  [48.470013,16.879983],
-  [48.596982,16.960288],
-  [48.816969,17.101985],
-  [48.800019,17.545007],
-  [48.903475,17.886485],
-  [48.996493,17.913512],
-  [49.043983,18.104973],
-  [49.271515,18.170498],
-  [49.315001,18.399994],
-  [49.495015,18.554971],
-  [49.496230,18.853144]
+map.getPane("outsideMask").style.zIndex=300;
 
-];
+map.getPane("outsideMask").style.pointerEvents="none";
 
 
-/* =====================================================
-   TRENČIANSKY KRAJ
-   – vizuálne zvýraznenie
-===================================================== */
+/* =========================================================
+   PANE PRE KRAJE
+========================================================= */
 
-/*
-  Polygon je použitý iba ako vizuálne zvýraznenie
-  regiónu. Mapové podklady pod ním zostávajú viditeľné,
-  takže obce, cesty, lesy a turistické značky ostávajú
-  zachované.
-*/
+map.createPane("regionsPane");
 
-const trencianskyKraj = [
+map.getPane("regionsPane").style.zIndex=350;
 
-  [49.330,17.820],
-  [49.320,18.120],
-  [49.330,18.350],
-  [49.250,18.560],
-  [49.090,18.670],
-  [48.900,18.780],
-  [48.700,18.720],
-  [48.570,18.580],
-  [48.520,18.330],
-  [48.500,18.080],
-  [48.540,17.800],
-  [48.610,17.610],
-  [48.700,17.500],
-  [48.820,17.470],
-  [48.960,17.500],
-  [49.100,17.650],
-  [49.220,17.700],
-  [49.330,17.820]
-
-];
+map.getPane("regionsPane").style.pointerEvents="none";
 
 
-/* =====================================================
-   FAREBNÝ TRENČIANSKY KRAJ
-===================================================== */
+/* =========================================================
+   PANE PRE STANICE
+========================================================= */
 
-L.polygon(
+map.createPane("stationsPane");
 
-  trencianskyKraj,
+map.getPane("stationsPane").style.zIndex=500;
 
-  {
 
-    color:"#ffffff",
+/* =========================================================
+   STRED SLOVENSKA
+========================================================= */
 
-    weight:2.5,
+map.setView(
+  [48.72,18.15],
+  8
+);
 
-    opacity:.95,
 
-    fillColor:"#79cfa9",
+/* =========================================================
+   SLOVENSKO
+========================================================= */
 
-    fillOpacity:.42,
+const slovakiaURL =
+"https://raw.githubusercontent.com/drakh/slovakia-gps-data/master/GeoJSON/epsg_4326/slovakia_esri_epsg_4326.geojson";
 
-    interactive:false
+
+/* =========================================================
+   KRAJE
+========================================================= */
+
+const regionsURL =
+"https://raw.githubusercontent.com/drakh/slovakia-gps-data/master/GeoJSON/epsg_4326/regions_epsg_4326.geojson";
+
+
+/* =========================================================
+   FARBA OSTATNÝCH KRAJOV
+========================================================= */
+
+const OTHER_REGION_COLOR =
+"#cbd0ce";
+
+
+const TRENCIAN_REGION_COLOR =
+"#72c9a2";
+
+
+/* =========================================================
+   VYTVORENIE MASKY MIMO SLOVENSKA
+========================================================= */
+
+function createOutsideMask(slovakia){
+
+  const geometry =
+    slovakia.features[0].geometry;
+
+  let countryRing;
+
+  if(
+    geometry.type === "Polygon"
+  ){
+
+    countryRing =
+      geometry.coordinates[0];
 
   }
 
-).addTo(map);
+  else if(
+    geometry.type === "MultiPolygon"
+  ){
 
+    countryRing =
+      geometry.coordinates
+        .sort(
+          (a,b)=>
+            b[0].length-a[0].length
+        )[0][0];
 
-/* =====================================================
-   SLOVENSKÁ MASKA
-===================================================== */
+  }
 
-/*
-  SVG maska:
-  - mimo Slovenska = šedá
-  - Slovensko = priehľadné
-  - žiadne druhé mapové dlaždice
-  - pri posúvaní sa nič farebne neprepína
-*/
+  else{
 
-const maskPane = map.createPane("slovakiaMaskPane");
-
-maskPane.style.zIndex = 450;
-
-maskPane.style.pointerEvents = "none";
-
-
-const maskLayer = L.layerGroup([],{
-
-}).addTo(map);
-
-
-function createSlovakiaMask(){
-
-  if(window.slovakiaMaskControl){
-
-    window.slovakiaMaskControl.remove();
+    return;
 
   }
 
 
-  const container =
-    L.DomUtil.create(
-      "div",
-      "slovakia-mask"
-    );
+  /*
+    Veľký obdĺžnik okolo celej oblasti.
+    Slovensko je diera.
+  */
+
+  const worldRing = [
+
+    [ -180, 90 ],
+
+    [ 180, 90 ],
+
+    [ 180, -90 ],
+
+    [ -180, -90 ],
+
+    [ -180, 90 ]
+
+  ];
 
 
-  container.style.pointerEvents="none";
+  const mask = L.polygon(
 
+    [
 
-  const svg =
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
-    );
+      worldRing,
 
+      countryRing.map(
+        p => [p[1],p[0]]
+      )
 
-  svg.setAttribute(
-    "width",
-    "100%"
-  );
+    ],
 
-  svg.setAttribute(
-    "height",
-    "100%"
-  );
+    {
 
-  svg.setAttribute(
-    "preserveAspectRatio",
-    "none"
-  );
+      pane:"outsideMask",
 
+      stroke:false,
 
-  const defs =
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "defs"
-    );
+      fillColor:"#d7dcda",
 
+      fillOpacity:1,
 
-  const mask =
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "mask"
-    );
+      fillRule:"evenodd",
 
+      interactive:false
 
-  mask.setAttribute(
-    "id",
-    "slovakiaMask"
-  );
+    }
 
-
-  const background =
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "rect"
-    );
-
-
-  background.setAttribute(
-    "x",
-    "0"
-  );
-
-  background.setAttribute(
-    "y",
-    "0"
-  );
-
-  background.setAttribute(
-    "width",
-    "100%"
-  );
-
-  background.setAttribute(
-    "height",
-    "100%"
-  );
-
-  background.setAttribute(
-    "fill",
-    "white"
   );
 
 
-  mask.appendChild(background);
+  mask.addTo(map);
+
+}
 
 
-  const hole =
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "polygon"
-    );
+/* =========================================================
+   KRAJE
+========================================================= */
 
+function loadRegions(){
 
-  const updateHole = function(){
+  fetch(regionsURL)
 
-    const points =
-      slovakia.map(function(coord){
+    .then(
+      response=>{
 
-        const p =
-          map.latLngToContainerPoint(
-            [coord[0],coord[1]]
+        if(!response.ok){
+          throw new Error(
+            "Kraje sa nepodarilo načítať."
           );
+        }
 
-        return p.x + "," + p.y;
+        return response.json();
 
-      }).join(" ");
+      }
+    )
 
+    .then(
+      data=>{
 
-    hole.setAttribute(
-      "points",
-      points
-    );
+        L.geoJSON(
 
-  };
+          data,
 
+          {
 
-  updateHole();
+            pane:"regionsPane",
 
+            interactive:false,
 
-  hole.setAttribute(
-    "fill",
-    "black"
-  );
+            style:function(feature){
 
+              const props =
+                feature.properties || {};
 
-  mask.appendChild(hole);
+              const text =
+                JSON.stringify(props)
+                  .toLowerCase();
 
-  defs.appendChild(mask);
+              const isTrencin =
+                text.includes("tren");
 
-  svg.appendChild(defs);
+              return {
 
+                color:"#ffffff",
 
-  const gray =
-    document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "rect"
-    );
+                weight:
+                  isTrencin ? 2.5 : 1.5,
 
+                opacity:1,
 
-  gray.setAttribute(
-    "x",
-    "0"
-  );
+                fillColor:
+                  isTrencin
+                    ? TRENCIAN_REGION_COLOR
+                    : OTHER_REGION_COLOR,
 
-  gray.setAttribute(
-    "y",
-    "0"
-  );
+                fillOpacity:
+                  isTrencin
+                    ? .55
+                    : .92
 
-  gray.setAttribute(
-    "width",
-    "100%"
-  );
+              };
 
-  gray.setAttribute(
-    "height",
-    "100%"
-  );
+            }
 
-  gray.setAttribute(
-    "fill",
-    "#d8ddda"
-  );
+          }
 
-  gray.setAttribute(
-    "mask",
-    "url(#slovakiaMask)"
-  );
-
-
-  svg.appendChild(gray);
-
-
-  container.appendChild(svg);
-
-
-  map.getContainer().appendChild(
-    container
-  );
-
-
-  window.slovakiaMaskControl = {
-
-    container:container,
-
-    update:updateHole,
-
-    remove:function(){
-
-      if(container.parentNode){
-
-        container.parentNode.removeChild(
-          container
-        );
+        ).addTo(map);
 
       }
 
-    }
+    )
 
-  };
+    .catch(
+      error=>{
+        console.error(error);
+      }
+    );
 
 }
 
 
-createSlovakiaMask();
-
-
-map.on(
-
-  "move",
-
-  function(){
-
-    if(window.slovakiaMaskControl){
-
-      window.slovakiaMaskControl.update();
-
-    }
-
-  }
-
-);
-
-map.on(
-
-  "zoom",
-
-  function(){
-
-    if(window.slovakiaMaskControl){
-
-      window.slovakiaMaskControl.update();
-
-    }
-
-  }
-
-);
-
-
-/* =====================================================
+/* =========================================================
    STANICE
-===================================================== */
+========================================================= */
 
-/*
-  názov
-  latitude
-  longitude
-  kapacita %
-
-  Každá stanica:
-  2.0 kWp solárne panely
-  7.5 kWh batéria
-*/
-
-const stations = [
-
-  ["Trenčín",48.8945,18.0440,78],
-
-  ["Beckov",48.7880,17.8980,92],
-
-  ["Nové Mesto nad Váhom",48.7570,17.8300,34],
-
-  ["Myjava",48.7580,17.5680,63],
-
-  ["Dubnica nad Váhom",48.9610,18.1670,72],
-
-  ["Ilava",49.0010,18.2360,18],
-
-  ["Púchov",49.1240,18.3250,12],
-
-  ["Považská Bystrica",49.1150,18.4490,55],
-
-  ["Trenčianske Teplice",48.9100,18.1680,67],
-
-  ["Nemšová",48.9670,18.1190,81],
-
-  ["Bánovce nad Bebravou",48.7210,18.2570,47],
-
-  ["Bojnice",48.7810,18.5850,96],
-
-  ["Partizánske",48.6290,18.3840,59],
-
-  ["Brezová pod Bradlom",48.6640,17.5400,39],
-
-  ["Čachtice",48.7140,17.7870,74],
-
-  ["Duchonka",48.6980,18.0700,21],
-
-  ["Manínska tiesňava",49.1760,18.4860,88],
-
-  ["Stará Turá",48.7780,17.6950,51],
-
-  ["Handlová",48.7270,18.7600,43],
-
-  ["Inovec",48.8100,18.0300,61],
-
-  ["Zelená Voda",48.7600,17.9880,27],
-
-  ["Skalka",48.8940,18.0090,95],
-
-  ["Lazy pod Makytou",49.2210,18.2340,69],
-
-  ["Kľak",48.9940,18.6630,58],
-
-  ["Zamarovce",48.9090,18.0200,83],
-
-  ["Soblahov",48.8640,18.0860,36],
-
-  ["Mníchova Lehota",48.8390,18.0700,65],
-
-  ["Omšenie",48.9000,18.1650,44],
-
-  ["Pruské",49.0160,18.2980,77],
-
-  ["Lednické Rovné",49.0600,18.3040,31],
-
-  ["Beluša",49.0660,18.3330,56],
-
-  ["Pružina",49.0960,18.5220,73],
-
-  ["Papradno",49.2140,18.4380,25],
-
-  ["Zliechov",48.9620,18.4430,64],
-
-  ["Valaská Belá",48.9600,18.3990,82],
-
-  ["Nitrianske Rudno",48.7860,18.4640,49],
-
-  ["Kľačno",48.8910,18.6370,37],
-
-  ["Rybany",48.6540,18.2510,71],
-
-  ["Uhrovec",48.7410,18.3360,57],
-
-  ["Haluzice",48.7770,18.0400,29]
-
-];
-
-
-/* =====================================================
-   STAV
-===================================================== */
-
-function getStatus(percent){
-
-  if(percent <= 20){
-
-    return {
-
-      cls:"station-red",
-
-      color:"#ef3d3d",
-
-      text:"Nízka kapacita"
-
-    };
-
-  }
-
-
-  if(percent <= 40){
-
-    return {
-
-      cls:"station-orange",
-
-      color:"#f39a16",
-
-      text:"Stredne nízka kapacita"
-
-    };
-
-  }
-
-
-  if(percent <= 60){
-
-    return {
-
-      cls:"station-yellow",
-
-      color:"#f1c40f",
-
-      text:"Stredná kapacita"
-
-    };
-
-  }
-
-
-  return {
-
-    cls:"station-green",
-
-    color:"#18a968",
-
-    text:"Dobrá kapacita"
-
-  };
-
-}
-
-
-/* =====================================================
-   VÝPOČET ENERGIE
-===================================================== */
-
-const BATTERY_KWH = 7.5;
-
-const EBIKE_KWH = 0.8;
-
-
-/*
-  Reálne využiteľná energia:
-  počítame približne 90 % kvôli stratám.
-*/
-
-const usableKWh =
-  BATTERY_KWH * 0.90;
-
-
-function calculateBikes(percent){
-
-  const available =
-    usableKWh * (percent / 100);
-
-  return available / EBIKE_KWH;
-
-}
-
-
-/* =====================================================
-   VYTVORENIE IKONY
-===================================================== */
-
-function createStationIcon(status){
-
-  return L.divIcon({
-
-    className:"",
-
-    html:
-
-      '<div class="station-wrap">' +
-
-        '<div class="station ' +
-        status.cls +
-        '">' +
-
-          '<div class="station-pulse"></div>' +
-
-          '<div class="station-panel"></div>' +
-
-        '</div>' +
-
-      '</div>',
-
-    iconSize:[30,38],
-
-    iconAnchor:[15,38],
-
-    popupAnchor:[0,-35]
-
-  });
-
-}
-
-
-/* =====================================================
-   STANICE NA MAPE
-===================================================== */
-
-stations.forEach(function(data){
-
-  const name = data[0];
-
-  const lat = data[1];
-
-  const lon = data[2];
-
-  const percent = data[3];
-
+function createStationIcon(station){
 
   const status =
-    getStatus(percent);
+    stationStatus(station.pct);
 
 
-  const bikes =
-    calculateBikes(percent);
+  return L.divIcon(
+
+    {
+
+      className:"",
+
+      html:
+
+        '<div class="station-marker ' +
+          status.className +
+        '">' +
+
+          '<div class="station-panel">' +
+
+            '<span class="station-lightning">' +
+              '⚡' +
+            '</span>' +
+
+          '</div>' +
+
+        '</div>',
+
+      iconSize:[31,31],
+
+      iconAnchor:[15,15],
+
+      popupAnchor:[0,-15]
+
+    }
+
+  );
+
+}
 
 
-  const roundedBikes =
-    Math.max(
-      0,
-      Math.floor(bikes * 10) / 10
+/* =========================================================
+   VÝPOČET NABITÍ E-BIKOV
+========================================================= */
+
+function calculateCharges(batteryKwh){
+
+  /*
+    Priemerná kapacita e-bike:
+    800 Wh = 0.8 kWh
+
+    Používame približný využiteľný obsah
+    batérie stanice 90 %.
+  */
+
+  const usable =
+    batteryKwh * 0.90;
+
+  return Math.floor(
+    usable / 0.8
+  );
+
+}
+
+
+/* =========================================================
+   POPUP
+========================================================= */
+
+function createPopup(station){
+
+  const status =
+    stationStatus(station.pct);
+
+  const charges =
+    calculateCharges(
+      station.battery
     );
 
 
-  const availableKWh =
-    Math.round(
-      usableKWh *
-      (percent / 100) *
-      10
-    ) / 10;
+  const availableEnergy =
+    (
+      station.battery *
+      station.pct /
+      100
+    ).toFixed(1);
 
 
-  const icon =
-    createStationIcon(status);
+  const occupied =
+    station.occupied;
 
 
-  const popup = `
-
-    <div class="popup">
-
-      <div class="popup-title">
-        ⚡ ebike-soltech
-      </div>
-
-      <div class="popup-location">
-        📍 ${name}
-      </div>
-
-      <div class="status">
-
-        <span class="status-dot"
-              style="background:${status.color}">
-        </span>
-
-        ${status.text}
-
-      </div>
-
-      <div class="capacity-title">
-        Aktuálne nabitie batérie stanice
-      </div>
-
-      <div class="capacity">
-        ${percent} %
-      </div>
-
-      <div class="capacity-bar">
-
-        <div
-          class="capacity-fill"
-          style="
-            width:${percent}%;
-            background:${status.color};
-          "
-        ></div>
-
-      </div>
+  const free =
+    8 - occupied;
 
 
-      <div class="info-grid">
+  return `
 
-        <div class="info-box">
+    <div class="station-card">
 
-          <strong>
-            2,0 kWp
-          </strong>
+      <div class="station-photo">
 
-          <span>
-            fotovoltický výkon
-          </span>
-
+        <div class="station-photo-icon">
+          ☀️⚡🚲
         </div>
 
-
-        <div class="info-box">
-
-          <strong>
-            7,5 kWh
-          </strong>
-
-          <span>
-            kapacita batérie
-          </span>
-
-        </div>
-
-
-        <div class="info-box">
-
-          <strong>
-            ${availableKWh} kWh
-          </strong>
-
-          <span>
-            aktuálne dostupná energia
-          </span>
-
-        </div>
-
-
-        <div class="info-box">
-
-          <strong>
-            ${roundedBikes}
-          </strong>
-
-          <span>
-            približný počet 800 Wh nabití
-          </span>
-
+        <div class="station-photo-title">
+          E-BIKE POINT ${station.name}
         </div>
 
       </div>
 
 
-      <div class="energy">
+      <div class="station-body">
 
-        <strong>
-          🔋 E-bike 800 Wh
-        </strong>
 
-        <span>
-          Pri aktuálnom stave batérie je možné
-          teoreticky nabiť približne
-          <b>${roundedBikes} e-bike</b>
-          s kapacitou 800 Wh.
-          Výpočet počíta približne s 90 %
-          využiteľnej energie.
-        </span>
+        <div class="station-location">
+
+          📍 ${station.name}
+
+        </div>
+
+
+        <div class="status-line">
+
+          <span>
+            ${status.label}
+          </span>
+
+          <span class="status-value"
+                style="color:${status.color}">
+
+            ${station.pct} %
+
+          </span>
+
+        </div>
+
+
+        <div class="capacity-meter">
+
+          <span
+            style="
+              width:${station.pct}%;
+              background:${status.color};
+            "
+          ></span>
+
+        </div>
+
+
+        <div class="station-grid">
+
+
+          <div class="station-stat">
+
+            <strong>
+              ${station.solar} kWp
+            </strong>
+
+            <small>
+              fotovoltický výkon
+            </small>
+
+          </div>
+
+
+          <div class="station-stat">
+
+            <strong>
+              ${station.battery} kWh
+            </strong>
+
+            <small>
+              kapacita batérie
+            </small>
+
+          </div>
+
+
+          <div class="station-stat">
+
+            <strong>
+              ${availableEnergy} kWh
+            </strong>
+
+            <small>
+              aktuálne dostupné
+            </small>
+
+          </div>
+
+
+          <div class="station-stat">
+
+            <strong>
+              cca ${charges}
+            </strong>
+
+            <small>
+              plných e-bike nabití
+            </small>
+
+          </div>
+
+
+          <div class="station-stat">
+
+            <strong>
+              ${occupied} / 8
+            </strong>
+
+            <small>
+              obsadené konektory
+            </small>
+
+          </div>
+
+
+          <div class="station-stat">
+
+            <strong>
+              ${free}
+            </strong>
+
+            <small>
+              voľné konektory
+            </small>
+
+          </div>
+
+
+        </div>
+
+
+        <a
+
+          class="navigate-btn"
+
+          target="_blank"
+
+          href="https://mapy.com/fnc/v1/showmap?mapset=outdoor&center=${station.lon},${station.lat}&zoom=15&marker=true"
+
+        >
+
+          ➤ Navigovať na stanicu
+
+        </a>
+
 
       </div>
-
-
-      <a
-        class="nav-button"
-        target="_blank"
-        rel="noopener"
-        href="
-          https://mapy.com/zakladni
-          ?x=${lon}
-          &y=${lat}
-          &z=16
-        "
-      >
-        ➤ Navigovať v Mapy.com
-      </a>
 
     </div>
 
   `;
 
+}
 
-  L.marker(
 
-    [lat,lon],
+/* =========================================================
+   VYKRESLENIE STANÍC
+========================================================= */
 
-    {
+function addStations(){
 
-      icon:icon,
+  stations.forEach(
 
-      riseOnHover:true
+    station=>{
 
-    }
+      const marker =
+        L.marker(
 
-  )
+          [
+            station.lat,
+            station.lon
+          ],
 
-  .addTo(map)
+          {
 
-  .bindPopup(
+            icon:
+              createStationIcon(
+                station
+              ),
 
-    popup,
+            pane:"stationsPane",
 
-    {
+            keyboard:true
 
-      maxWidth:310,
+          }
 
-      closeButton:true,
+        );
 
-      autoPan:true,
 
-      keepInView:true
+      marker
+
+        .addTo(map)
+
+        .bindPopup(
+
+          createPopup(
+            station
+          ),
+
+          {
+
+            maxWidth:320,
+
+            minWidth:280,
+
+            closeButton:true,
+
+            autoPan:true,
+
+            autoPanPadding:
+              [20,20]
+
+          }
+
+        );
 
     }
 
   );
 
-});
+}
 
 
-/* =====================================================
+/* =========================================================
    LEGENDA
-===================================================== */
+========================================================= */
 
 const legend =
-  L.control({
-
-    position:"bottomright"
-
-  });
+  L.control(
+    {
+      position:"bottomright"
+    }
+  );
 
 
 legend.onAdd =
@@ -1693,38 +1798,50 @@ legend.onAdd =
     div.innerHTML = `
 
       <div class="legend-title">
-        Stav nabitia stanice
+        Stav stanice
       </div>
+
 
       <div class="legend-row">
 
         <span class="legend-dot red"></span>
 
-        0–20 % – nízka
+        <span>
+          0–20 % – kritická
+        </span>
 
       </div>
+
 
       <div class="legend-row">
 
         <span class="legend-dot orange"></span>
 
-        21–40 % – stredne nízka
+        <span>
+          21–40 % – nízka
+        </span>
 
       </div>
+
 
       <div class="legend-row">
 
         <span class="legend-dot yellow"></span>
 
-        41–60 % – stredná
+        <span>
+          41–60 % – stredná
+        </span>
 
       </div>
+
 
       <div class="legend-row">
 
         <span class="legend-dot green"></span>
 
-        61–100 % – dobrá
+        <span>
+          61–100 % – dobrá
+        </span>
 
       </div>
 
@@ -1739,68 +1856,265 @@ legend.onAdd =
 legend.addTo(map);
 
 
-/* =====================================================
-   CENTROVANIE NA SLOVENSKO
-===================================================== */
+/* =========================================================
+   NAČÍTANIE
+========================================================= */
 
-map.fitBounds(
+Promise.all(
 
-  slovakia.map(function(point){
+  [
 
-    return [
-      point[0],
-      point[1]
-    ];
+    fetch(
+      slovakiaURL
+    ).then(
+      response=>{
 
-  }),
+        if(!response.ok){
 
-  {
+          throw new Error(
+            "Slovensko sa nepodarilo načítať."
+          );
 
-    padding:[20,20]
+        }
+
+        return response.json();
+
+      }
+    ),
+
+    fetch(
+      regionsURL
+    ).then(
+      response=>{
+
+        if(!response.ok){
+
+          throw new Error(
+            "Kraje sa nepodarilo načítať."
+          );
+
+        }
+
+        return response.json();
+
+      }
+    )
+
+  ]
+
+)
+
+.then(
+
+  ([slovakia,regions])=>{
+
+
+    /* Maska mimo Slovenska */
+
+    createOutsideMask(
+      slovakia
+    );
+
+
+    /* Kraje */
+
+    L.geoJSON(
+
+      regions,
+
+      {
+
+        pane:"regionsPane",
+
+        interactive:false,
+
+        style:function(feature){
+
+          const props =
+            feature.properties || {};
+
+          const text =
+            JSON.stringify(props)
+              .toLowerCase();
+
+
+          const isTrencin =
+            text.includes("tren");
+
+
+          return {
+
+            color:"#ffffff",
+
+            weight:
+              isTrencin
+                ? 2.5
+                : 1.4,
+
+            opacity:1,
+
+            fillColor:
+              isTrencin
+                ? TRENCIAN_REGION_COLOR
+                : OTHER_REGION_COLOR,
+
+            fillOpacity:
+              isTrencin
+                ? .52
+                : .90
+
+          };
+
+        }
+
+      }
+
+    ).addTo(map);
+
+
+    /* Stanice */
+
+    addStations();
+
+
+    /* Slovensko sa zobrazí celé */
+
+    const countryLayer =
+      L.geoJSON(
+        slovakia
+      );
+
+
+    map.fitBounds(
+      countryLayer.getBounds(),
+      {
+        padding:
+          [20,20]
+      }
+    );
+
+
+    /* mierne priblíženie */
+
+    map.setZoom(
+      Math.max(
+        map.getZoom(),
+        8
+      )
+    );
+
+
+    /* načítané */
+
+    const loading =
+      document.getElementById(
+        "loading"
+      );
+
+
+    loading.style.opacity="0";
+
+
+    setTimeout(
+      ()=>{
+        loading.style.display="none";
+      },
+      400
+    );
+
+
+  }
+
+)
+
+.catch(
+
+  error=>{
+
+    console.error(
+      error
+    );
+
+
+    const loading =
+      document.getElementById(
+        "loading"
+      );
+
+
+    loading.innerHTML = `
+
+      <div class="loading-box">
+
+        <div class="loading-icon">
+          ⚠️
+        </div>
+
+        <div class="loading-title">
+          Mapu sa nepodarilo načítať
+        </div>
+
+        <div class="loading-sub">
+          Skontroluj API kľúč Mapy.com
+          a jeho Referrer nastavenie.
+        </div>
+
+      </div>
+
+    `;
 
   }
 
 );
 
 
-/* =====================================================
-   PRI NAČÍTANÍ
-===================================================== */
+/* =========================================================
+   OPRAVA VEĽKOSTI MAPY PO OTVORENÍ
+========================================================= */
 
-setTimeout(function(){
+setTimeout(
 
-  map.invalidateSize();
+  ()=>{
 
-  if(window.slovakiaMaskControl){
+    map.invalidateSize(
+      true
+    );
 
-    window.slovakiaMaskControl.update();
+  },
 
-  }
+  500
 
-},500);
+);
 
 
-/* =====================================================
-   OPRAVA MASKY PRI RESIZE
-===================================================== */
+setTimeout(
+
+  ()=>{
+
+    map.invalidateSize(
+      true
+    );
+
+  },
+
+  1500
+
+);
+
+
+/* =========================================================
+   PRI ZMENE VEĽKOSTI OKNA
+========================================================= */
 
 window.addEventListener(
 
   "resize",
 
-  function(){
+  ()=>{
 
-    map.invalidateSize();
-
-    setTimeout(function(){
-
-      if(window.slovakiaMaskControl){
-
-        window.slovakiaMaskControl.update();
-
-      }
-
-    },100);
+    map.invalidateSize(
+      true
+    );
 
   }
 
